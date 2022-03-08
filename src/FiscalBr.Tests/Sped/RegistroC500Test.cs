@@ -220,8 +220,7 @@ namespace FiscalBr.Tests.Sped
                 // V14
                 ChvDoce = "01234567890123456789012345678901234567890123",
                 FinDoce = IndCodFinDoce.Normal,
-                ChvDoceRef = "",
-                IndDest = IndCodDestAcessante.NaoContribuinte,
+                ChvDoceRef = "",                
                 CodMunDest = "1234",
                 CodCta = "3.1.01.01.001",
                 CodModDocRef = "06",
