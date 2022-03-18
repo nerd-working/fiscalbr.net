@@ -169,7 +169,7 @@ namespace FiscalBr.EFDFiscal
             ///     Código da Situação Tributária referente ao ICMS, conforme a Tabela indicada no item 4.3.1
             /// </summary>
             [SpedCampos(2, "CST_ICMS", "N", 3, 0, true, 6)]
-            public string CstIcms { get; set; }
+            public int CstIcms { get; set; }
 
             /// <summary>
             ///     Informe a base de cálculo do ICMS
