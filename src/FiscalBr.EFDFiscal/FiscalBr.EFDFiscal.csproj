@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;net48;net472;net461;net46;net452;net451;net45</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Authors>orochasamuel sroliveira</Authors>
     <Company>orochasamuel sroliveira</Company>
     <Product>FiscalBr EFDFiscal (ICMS/IPI)</Product>
