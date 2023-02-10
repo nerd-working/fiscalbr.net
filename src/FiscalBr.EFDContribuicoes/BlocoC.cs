@@ -510,7 +510,7 @@ namespace FiscalBr.EFDContribuicoes
             ///     1 - Decendial
             /// </remarks>
             [SpedCampos(19, "IND_APUR", "C", 1, 0, false, 2)]
-            public IndPeriodoApuracaoIpi IndApur { get; set; }
+            public IndPeriodoApuracaoIpi? IndApur { get; set; }
 
             /// <summary>
             ///     Código da situação tributária referente ao IPI
@@ -1714,6 +1714,12 @@ namespace FiscalBr.EFDContribuicoes
             /// </summary>
             [SpedCampos(14, "VL_COFINS", "N", 0, 2, false, 2)]
             public decimal? VlCofins { get; set; }
+
+            /// <summary>
+            ///     Chave do Documento Fiscal Eletrônico
+            /// </summary>
+            [SpedCampos(15, "CHV_DOCe", "N", 44, 0, false, 6)]
+            public string ChvDoce { get; set; }
 
             public List<RegistroC501> RegC501s { get; set; }
             public List<RegistroC505> RegC505s { get; set; }
