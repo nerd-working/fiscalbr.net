@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5C2A527E-0639-46CE-8DE5-225883B09579}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FiscalBr.ECF", "src\FiscalBr.ECF\FiscalBr.ECF.csproj", "{249CEE6E-0C57-467D-8DCB-4D30CE6435EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FiscalBr.Tests", "src\FiscalBr.Tests\FiscalBr.Tests.csproj", "{F2F1AD76-EEB3-41B1-91B2-50F84CD46101}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiscalBr.Parser", "FiscalBr.Parser\FiscalBr.Parser.csproj", "{B14699A5-96F3-4B3B-BBA3-1A2EA189B1F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{F2F1AD76-EEB3-41B1-91B2-50F84CD46101}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2F1AD76-EEB3-41B1-91B2-50F84CD46101}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2F1AD76-EEB3-41B1-91B2-50F84CD46101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B14699A5-96F3-4B3B-BBA3-1A2EA189B1F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B14699A5-96F3-4B3B-BBA3-1A2EA189B1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B14699A5-96F3-4B3B-BBA3-1A2EA189B1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B14699A5-96F3-4B3B-BBA3-1A2EA189B1F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
