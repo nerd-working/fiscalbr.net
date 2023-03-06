@@ -1,7 +1,4 @@
-﻿using Xunit;
-using FiscalBr.Dimob;
-
-namespace FiscalBr.Tests.Dimob
+﻿namespace FiscalBr.Test.Dimob
 {
     public class DimobTrailerTest
     {

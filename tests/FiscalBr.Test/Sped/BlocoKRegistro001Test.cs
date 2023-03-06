@@ -1,13 +1,6 @@
-﻿using FiscalBr.Common;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using Xunit;
-
-namespace FiscalBr.Tests.Sped
+﻿namespace FiscalBr.Test.Sped
 {
-    public class RegistroK001Test
+    public class BlocoKRegistro001Test
     {
         [Fact]
         public void Escrever_Registro_K001_EFDFiscal_V9()

@@ -1,20 +1,13 @@
-﻿using FiscalBr.Common;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using Xunit;
-
-namespace FiscalBr.Tests.Sped
+﻿namespace FiscalBr.Test.Sped
 {
-    public class RegistroC500Test
+    public class BlocoCRegistro500Test
     {
-        [Fact]        
+        [Fact]
         public void Escrever_Registro_C500_EFDFiscal_V2()
         {
             SetCulture();
             var expectedResult =
-                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|{ Environment.NewLine}";
+                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|{Environment.NewLine}";
 
             var source = new EFDFiscal.BlocoC.RegistroC500
             {
@@ -71,7 +64,7 @@ namespace FiscalBr.Tests.Sped
         {
             SetCulture();
             var expectedResult =
-                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|1|01|{ Environment.NewLine}";
+                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|1|01|{Environment.NewLine}";
 
             var source = new EFDFiscal.BlocoC.RegistroC500
             {
@@ -128,7 +121,7 @@ namespace FiscalBr.Tests.Sped
         {
             SetCulture();
             var expectedResult =
-                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|1|01|01234567890123456789012345678901234567890123|1||9|1234|3.1.01.01.001|{ Environment.NewLine}";
+                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|1|01|01234567890123456789012345678901234567890123|1||9|1234|3.1.01.01.001|{Environment.NewLine}";
 
             var source = new EFDFiscal.BlocoC.RegistroC500
             {
@@ -185,7 +178,7 @@ namespace FiscalBr.Tests.Sped
         {
             SetCulture();
             var expectedResult =
-                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|1|01|01234567890123456789012345678901234567890123|1||9|1234|3.1.01.01.001|06|1234|1111|123456789|01012009|1,00|1,00|{ Environment.NewLine}";
+                $"|C500|1|0|CLIENTE 1 (USAR CPF/CNPJ PREFERENCIALMENTE)|66|00|9999|000|06|123456789|01012009|01012009|99,99|9,99|0,00|0,00|0,00|0,00|90,00|22,50|0,00|0,00|CODINF|1,49|6,84|1|01|01234567890123456789012345678901234567890123|1||9|1234|3.1.01.01.001|06|1234|1111|123456789|01012009|1,00|1,00|{Environment.NewLine}";
 
             var source = new EFDFiscal.BlocoC.RegistroC500
             {
@@ -227,7 +220,7 @@ namespace FiscalBr.Tests.Sped
                 HashDocRef = "1234",
                 SerDocRef = "1111",
                 NumDocRef = 123456789,
-                MesDocRef = new DateTime(2009,1,1),
+                MesDocRef = new DateTime(2009, 1, 1),
                 EnerInjet = 1,
                 OutrDed = 1
             };
