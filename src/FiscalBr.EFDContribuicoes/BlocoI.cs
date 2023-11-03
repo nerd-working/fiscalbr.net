@@ -1,20 +1,20 @@
 ﻿using FiscalBr.Common;
 using FiscalBr.Common.Sped;
+using FiscalBr.Common.Sped.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace FiscalBr.EFDContribuicoes
 {
-    public class BlocoI
+    public class BlocoI : IBlocoSped
     {
         public RegistroI001 RegI001 { get; set; }
         public RegistroI990 RegI990 { get; set; }
 
-        public class RegistroI001 : RegistroBaseSped
+        public class RegistroI001 : RegistroSped
         {
-            public RegistroI001()
+            public RegistroI001() : base("I001")
             {
-                Reg = "I001";
             }
 
             [SpedCampos(2, "IND_MOV", "C", 1, 0, true, 2)]
@@ -26,14 +26,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I010: Identificação da Pessoa Juridica/Estabelecimento
         /// </summary>
-        public class RegistroI010 : RegistroBaseSped
+        public class RegistroI010 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI010"/>
             /// </summary>
-            public RegistroI010()
+            public RegistroI010() : base("I010")
             {
-                Reg = "I010";
             }
 
             /// <summary>
@@ -66,14 +65,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I100: Consolidação das Operações do Período
         /// </summary>
-        public class RegistroI100 : RegistroBaseSped
+        public class RegistroI100 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI100"/>
             /// </summary>
-            public RegistroI100()
+            public RegistroI100() : base("I100")
             {
-                Reg = "I100";
             }
 
             /// <summary>
@@ -149,14 +147,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I199: Processo Referenciado
         /// </summary>
-        public class RegistroI199 : RegistroBaseSped
+        public class RegistroI199 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI199"/>
             /// </summary>
-            public RegistroI199()
+            public RegistroI199() : base("I199")
             {
-                Reg = "I199";
             }
 
             /// <summary>
@@ -179,14 +176,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I200: Composição das Receitas, Deduções e/ou Exclusões do Período
         /// </summary>
-        public class RegistroI200 : RegistroBaseSped
+        public class RegistroI200 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI200"/>
             /// </summary>
-            public RegistroI200()
+            public RegistroI200() : base("I200")
             {
-                Reg = "I200";
             }
 
             /// <summary>
@@ -226,14 +222,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I299: Processo Referenciado
         /// </summary>
-        public class RegistroI299 : RegistroBaseSped
+        public class RegistroI299 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI299"/>
             /// </summary>
-            public RegistroI299()
+            public RegistroI299() : base("I299")
             {
-                Reg = "I299";
             }
 
             /// <summary>
@@ -256,14 +251,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I300: Complemento das Operações –Detalhamento das Receitas, Deduções e/ou Exclusões Do Período
         /// </summary>
-        public class RegistroI300 : RegistroBaseSped
+        public class RegistroI300 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI300"/>
             /// </summary>
-            public RegistroI300()
+            public RegistroI300() : base("I300")
             {
-                Reg = "I300";
             }
 
             /// <summary>
@@ -296,14 +290,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO I399: Processo Referenciado
         /// </summary>
-        public class RegistroI399 : RegistroBaseSped
+        public class RegistroI399 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroI399"/>
             /// </summary>
-            public RegistroI399()
+            public RegistroI399() : base("I399")
             {
-                Reg = "I399";
             }
 
             /// <summary>
@@ -323,11 +316,10 @@ namespace FiscalBr.EFDContribuicoes
 
         }
 
-        public class RegistroI990 : RegistroBaseSped
+        public class RegistroI990 : RegistroSped
         {
-            public RegistroI990()
+            public RegistroI990() : base("I990")
             {
-                Reg = "I990";
             }
 
             [SpedCampos(2, "QTD_LIN_I", "N", int.MaxValue, 0, true, 2)]

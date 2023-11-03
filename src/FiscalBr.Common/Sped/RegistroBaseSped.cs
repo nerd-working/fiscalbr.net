@@ -4,6 +4,7 @@ using System.Text;
 
 namespace FiscalBr.Common.Sped
 {
+    [Obsolete]
     public class RegistroBaseSped
     {
         [SpedCampos(1, "REG", "C", 4, 0, true, 2)]
@@ -30,6 +31,11 @@ namespace FiscalBr.Common.Sped
             var enumObj = Enum.ToObject(type, value) as Enum;
 
             return enumObj.ToDefaultValue();
+        }
+
+        public virtual bool EhValido()
+        {
+            return true;
         }
     }
 }

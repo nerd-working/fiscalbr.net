@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FiscalBr.Common.Sped.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -249,7 +250,7 @@ namespace FiscalBr.Common.Sped
 
         private static bool SomenteParaLeitura(System.Reflection.PropertyInfo property)
         {
-            if (property.PropertyType.BaseType.Equals(typeof(RegistroBaseSped))) return true;
+            if (property.PropertyType.BaseType.Equals(typeof(RegistroSped))) return true;
 
             if (property.PropertyType.IsGenericType &&
                 property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) return true;
@@ -292,7 +293,7 @@ namespace FiscalBr.Common.Sped
 
             var listaComPropriedadesOrdenadas = ObtemListaComPropriedadesOrdenadas(type);
 
-            var availableVersions = (CodigoVersaoLeiaute[])Enum.GetValues(typeof(CodigoVersaoLeiaute));
+            var availableVersions = (VersaoLeiauteSped[])Enum.GetValues(typeof(VersaoLeiauteSped));
             var lastVersion = availableVersions.LastOrDefault();
 
             var sb = new StringBuilder();
@@ -332,7 +333,7 @@ namespace FiscalBr.Common.Sped
                         throw new Exception(string.Format(
                             "O campo {0} no registro {1} não possui atributo SPED definido!", property.Name, registroAtual));
 
-                    var propertyValue = RegistroBaseSped.GetPropValue(source, property.Name);
+                    var propertyValue = RegistroSped.GetPropValue(source as IRegistroSped, property.Name);
                     var propertyValueToStringSafe = propertyValue.ToStringSafe().Trim();
 
                     var isRequired = spedCampoAttr.IsObrigatorio;
@@ -374,7 +375,7 @@ namespace FiscalBr.Common.Sped
         /// <returns>Linha de arquivo SPED escrita e formatada.</returns>
         public static string EscreverCampos(
             this object source,
-            CodigoVersaoLeiaute version,
+            VersaoLeiauteSped version,
             DateTime? competenciaDeclaracao = null,
             bool tryTrim = false,
             bool ignoreErrors = false
@@ -441,7 +442,7 @@ namespace FiscalBr.Common.Sped
                     if (spedCampoAttr != null)
                     {
                         sb.Append("|");
-                        var propertyValue = RegistroBaseSped.GetPropValue(source, property.Name);
+                        var propertyValue = RegistroSped.GetPropValue(source as IRegistroSped, property.Name);
                         var propertyValueToStringSafe = propertyValue.ToStringSafe().Trim();
 
                         var isRequired = spedCampoAttr.IsObrigatorio;
@@ -515,7 +516,7 @@ namespace FiscalBr.Common.Sped
 
             var listaComPropriedadesOrdenadas = ObtemListaComPropriedadesOrdenadas(type);
 
-            var availableVersions = (CodigoVersaoLeiaute[])Enum.GetValues(typeof(CodigoVersaoLeiaute));
+            var availableVersions = (VersaoLeiauteSped[])Enum.GetValues(typeof(VersaoLeiauteSped));
             var lastVersion = availableVersions.LastOrDefault();
 
             var sb = new StringBuilder();
@@ -562,7 +563,7 @@ namespace FiscalBr.Common.Sped
                         throw new Exception(string.Format(
                             "O campo {0} no registro {1} não possui atributo SPED definido!", property.Name, registroAtual));
 
-                    var propertyValue = RegistroBaseSped.GetPropValue(source, property.Name);
+                    var propertyValue = RegistroSped.GetPropValue(source as IRegistroSped, property.Name);
                     var propertyValueToStringSafe = propertyValue.ToStringSafe().Trim();
 
                     var isRequired = spedCampoAttr.IsObrigatorio;
@@ -609,7 +610,7 @@ namespace FiscalBr.Common.Sped
         /// <returns>Linha de arquivo SPED escrita e formatada.</returns>
         public static string EscreverCampos(
             this object source,
-            CodigoVersaoLeiaute version,
+            VersaoLeiauteSped version,
             out string errosEncontrados,
             DateTime? competenciaDeclaracao = null,
             bool tryTrim = false
@@ -681,7 +682,7 @@ namespace FiscalBr.Common.Sped
                         throw new Exception(string.Format(
                             "O campo {0} no registro {1} não possui atributo SPED definido!", property.Name, registroAtual));
 
-                    var propertyValue = RegistroBaseSped.GetPropValue(source, property.Name);
+                    var propertyValue = RegistroSped.GetPropValue(source as IRegistroSped, property.Name);
                     var propertyValueToStringSafe = propertyValue.ToStringSafe().Trim();
 
                     var isRequired = spedCampoAttr.IsObrigatorio;

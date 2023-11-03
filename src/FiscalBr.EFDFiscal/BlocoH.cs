@@ -1,5 +1,6 @@
 ﻿using FiscalBr.Common;
 using FiscalBr.Common.Sped;
+using FiscalBr.Common.Sped.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace FiscalBr.EFDFiscal
     /// <summary>
     ///     BLOCO H: INVENTÁRIO FÍSICO
     /// </summary>
-    public class BlocoH
+    public class BlocoH : IBlocoSped
     {
         public RegistroH001 RegH001 { get; set; }
         public RegistroH990 RegH990 { get; set; }
@@ -16,14 +17,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO H001: ABERTURA DO BLOCO H
         /// </summary>
-        public class RegistroH001 : RegistroBaseSped
+        public class RegistroH001 : RegistroSped
         {
             /// <summary>
             ///  Inicializa uma nova instância da classe <see cref="RegistroH001" />.
             /// </summary>
-            public RegistroH001()
+            public RegistroH001() : base("H001")
             {
-                Reg = "H001";
             }
 
             /// <summary>
@@ -38,14 +38,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO H005: TOTAIS DO INVENTÁRIO
         /// </summary>
-        public class RegistroH005 : RegistroBaseSped
+        public class RegistroH005 : RegistroSped
         {
             /// <summary>
             ///  Inicializa uma nova instância da classe <see cref="RegistroH005" />.
             /// </summary>
-            public RegistroH005()
+            public RegistroH005() : base("H005")
             {
-                Reg = "H005";
             }
 
             /// <summary>
@@ -77,14 +76,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO H010: INVENTÁRIO
         /// </summary>
-        public class RegistroH010 : RegistroBaseSped
+        public class RegistroH010 : RegistroSped
         {
             /// <summary>
             ///  Inicializa uma nova instância da classe <see cref="RegistroH010" />.
             /// </summary>
-            public RegistroH010()
+            public RegistroH010() : base("H010")
             {
-                Reg = "H010";
             }
 
             /// <summary>
@@ -155,14 +153,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO H020: Informação complementar do Inventário.
         /// </summary>
-        public class RegistroH020 : RegistroBaseSped
+        public class RegistroH020 : RegistroSped
         {
             /// <summary>
             ///  Inicializa uma nova instância da classe <see cref="RegistroH020" />.
             /// </summary>
-            public RegistroH020()
+            public RegistroH020() : base("H020")
             {
-                Reg = "H020";
             }
 
             /// <summary>
@@ -187,14 +184,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO H030: 
         /// </summary>
-        public class RegistroH030 : RegistroBaseSped
+        public class RegistroH030 : RegistroSped
         {
             /// <summary>
             ///  Inicializa uma nova instância da classe <see cref="RegistroH030" />.
             /// </summary>
-            public RegistroH030()
+            public RegistroH030() : base("H030")
             {
-                Reg = "H030";
             }
 
             /// <summary>
@@ -225,14 +221,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO H990: ENCERRAMENTO DO BLOCO H.
         /// </summary>
-        public class RegistroH990 : RegistroBaseSped
+        public class RegistroH990 : RegistroSped
         {
             /// <summary>
             ///  Inicializa uma nova instância da classe <see cref="RegistroH990" />.
             /// </summary>
-            public RegistroH990()
+            public RegistroH990() : base("H990")
             {
-                Reg = "H990";
             }
 
             /// <summary>

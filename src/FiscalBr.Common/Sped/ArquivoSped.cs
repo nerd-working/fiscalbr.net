@@ -6,12 +6,6 @@ using System.Text;
 
 namespace FiscalBr.Common.Sped
 {
-    public sealed class SpedEventArgs : EventArgs
-    {
-        public string Linha { get; set; }
-        public RegistroBaseSped Registro { get; set; }
-    }
-
     public abstract class ArquivoSped
     {
         public event EventHandler<SpedEventArgs> AoProcessarLinha;
@@ -30,14 +24,102 @@ namespace FiscalBr.Common.Sped
             Erros = new List<string>();
         }
 
-        public virtual void Ler(string path, Encoding encoding = null)
+        public virtual void Ler(string path, Encoding encoding = null, int codVersaoLayout = 0)
         {
+            if (!File.Exists(path))
+                throw new Exception("O arquivo não existe! Verifique e tente novamente.");
+
             Erros = new List<string>();
 
+            // TODO: Alterar para remover os espaços em branco antes do primeiro pipe e após o último pipe.
             Linhas = File.ReadAllLines(path, encoding ?? Encoding.Default).ToList();
 
+            if (ExisteAssinaturaNoArquivo())
+                RemoverLinhasDeAssinatura();
+
+            RemoverLinhasVazias();
+        }
+
+        public virtual void Ler(string[] source)
+        {
+            if (source == null || source.Length == 0) throw new Exception("Nada a ser lido! Verifique e tente novamente");
+
+            Erros = new List<string>();
+
+            Linhas = source.ToList();
+
+            if (ExisteAssinaturaNoArquivo())
+                RemoverLinhasDeAssinatura();
+
+            RemoverLinhasVazias();
+        }
+
+        private void RemoverLinhasVazias()
+        {
             //Remove linhas em branco
             Linhas.RemoveAll(l => string.IsNullOrEmpty(l.Trim()));
+        }
+
+        private void RemoverLinhasDeAssinatura()
+        {
+            var index9999 = Linhas.FindIndex(p => p.StartsWith("|9999"));
+
+            var startsAt = index9999 + 1;
+            var countedToDelete = Linhas.Count - startsAt;
+
+            Linhas.RemoveRange(startsAt, countedToDelete);
+        }
+
+        private bool ExisteAssinaturaNoArquivo()
+        {
+            var index9999 = Linhas.FindIndex(p => p.StartsWith("|9999"));
+
+            if (index9999 < 0)
+                return false;
+
+            if (Linhas.Count > index9999 + 1)
+                return true;
+
+            return false;
+        }
+
+        public int ObterVersaoLayout()
+        {
+            var versaoLayout = ObterUltimaVersaoDisponivelLayout();
+
+            if (Linhas.Count > 0)
+            {
+                var index0000 = Linhas.FindIndex(p => p.StartsWith("|0000"));
+
+                if (index0000 < 0)
+                    return versaoLayout;
+
+                var primeiraLinha = Linhas.ElementAt(index0000);
+
+                var dados = primeiraLinha.Split('|');
+
+                /*
+                 * [0] Primeiro pipe estará em branco
+                 * [1] Segundo pipe é do Registro 0000
+                 * [2] Terceiro pipe é o que queremos, a versão do layout
+                 */
+                var versaoLayoutArquivoLido = dados[2].ToInt();
+
+                if (versaoLayoutArquivoLido > 0 && versaoLayoutArquivoLido != versaoLayout)
+                    versaoLayout = versaoLayoutArquivoLido;
+            }
+
+            return versaoLayout;
+        }
+
+        private int ObterUltimaVersaoDisponivelLayout()
+        {
+            return Enum.GetValues(typeof(VersaoLeiauteSped)).Cast<int>().Max();
+        }
+
+        private int ObterPrimeiraVersaoLayout()
+        {
+            return Enum.GetValues(typeof(VersaoLeiauteSped)).Cast<int>().Min();
         }
 
         /// <summary>
@@ -71,7 +153,7 @@ namespace FiscalBr.Common.Sped
         /// Adicionar um objeto do tipo RegistroBaseSped no atributo "Linhas".
         /// Caso existe alguma falha na geração, adiciona a falha no atributo "Erros"
         /// </summary>
-        protected void EscreverLinha(RegistroBaseSped registro)
+        protected void EscreverLinha(RegistroSped registro)
         {
             string erro;
             string texto = registro.EscreverCampos(out erro, null, true);
@@ -88,8 +170,8 @@ namespace FiscalBr.Common.Sped
                 return;
 
             //Testa antes porque porque pode-se tratar de um bloco
-            if (registro is RegistroBaseSped)
-                EscreverLinha(registro as RegistroBaseSped);
+            if (registro is RegistroSped)
+                EscreverLinha(registro as RegistroSped);
 
             var tipo = registro.GetType();
 
@@ -104,7 +186,7 @@ namespace FiscalBr.Common.Sped
                 if (valor == null)
                     continue;
 
-                if (valor is RegistroBaseSped)
+                if (valor is RegistroSped)
                     GerarComFilhos(valor);
 
                 //Lista de objetos

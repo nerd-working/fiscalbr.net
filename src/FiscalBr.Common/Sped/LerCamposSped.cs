@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace FiscalBr.Common.Sped
 {
     public static class LerCamposSped
     {
-        public static object LerCampos(this string line, string file = "EFDFiscal")
+        public static object LerCampos(this string line, string file = "EFDFiscal", int codVersao = 0)
         {
             line = line.TrimStart().Substring(1);
 
@@ -25,7 +27,7 @@ namespace FiscalBr.Common.Sped
 
             var instantiatedObject = Activator.CreateInstance(objectType);
 
-            var properties = ObtemListaComPropriedadesOrdenadas(objectType);
+            var properties = ObtemListaComPropriedadesOrdenadas(objectType, codVersao);
 
             for (int i = 0; i < properties.Count; i++)
             {
@@ -54,7 +56,11 @@ namespace FiscalBr.Common.Sped
                     {
                         int convertedInt32Value;
                         conversionResult = Int32.TryParse(value.ToStringSafe(), out convertedInt32Value);
-                        prop.SetValue(instantiatedObject, convertedInt32Value);
+
+                        if (propType == typeof(Nullable<Int64>))
+                            prop.SetValue(instantiatedObject, (Nullable<Int64>)convertedInt32Value);
+                        else
+                            prop.SetValue(instantiatedObject, convertedInt32Value);
                     }
 
                     else if (propType == typeof(DateTime) || propType == typeof(Nullable<DateTime>))
@@ -72,16 +78,51 @@ namespace FiscalBr.Common.Sped
 
                     else if (propType.IsEnum)
                     {
-                        var convertedEnum = Enum.Parse(propType, value.ToStringSafe());
+                        foreach (var currentEnumItem in propType.GetEnumValues())
+                        {
+                            MemberInfo memberInfo = propType.GetMember(currentEnumItem.ToString()).FirstOrDefault();
 
-                        prop.SetValue(instantiatedObject, convertedEnum);
+                            if (memberInfo != null)
+                            {
+                                DefaultValueAttribute attribute = (DefaultValueAttribute)
+                                             memberInfo.GetCustomAttributes(typeof(DefaultValueAttribute), false)
+                                                       .FirstOrDefault();
+
+                                if (attribute != null)
+                                {
+                                    if (attribute.Value.ToString() == value.ToString())
+                                    {
+                                        var convertedEnum = Enum.Parse(propType, currentEnumItem.ToString());
+
+                                        prop.SetValue(instantiatedObject, convertedEnum);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     else if (propType == typeof(Decimal) || propType == typeof(Nullable<Decimal>))
                     {
                         Decimal convertedDecimalValue;
-                        conversionResult = Decimal.TryParse(value.ToStringSafe(), out convertedDecimalValue);
-                        prop.SetValue(instantiatedObject, convertedDecimalValue);
+                        System.Globalization.NumberStyles style = System.Globalization.NumberStyles.Number;
+                        conversionResult = Decimal.TryParse(value.ToStringSafe(), style, System.Globalization.CultureInfo.GetCultureInfo("pt-BR"), out convertedDecimalValue);
+                        
+                        if (propType == typeof(Nullable<Decimal>))
+                            prop.SetValue(instantiatedObject, (Nullable<Decimal>)convertedDecimalValue);
+                        else
+                            prop.SetValue(instantiatedObject, convertedDecimalValue);
+                    }
+                    else if (propType == typeof(Double) || propType == typeof(Nullable<Double>))
+                    {
+                        Double convertedDoubleValue;
+                        System.Globalization.NumberStyles style = System.Globalization.NumberStyles.Number;
+                        conversionResult = Double.TryParse(value.ToStringSafe(), style, System.Globalization.CultureInfo.GetCultureInfo("pt-BR"), out convertedDoubleValue);
+
+                        if (propType == typeof(Nullable<Double>))
+                            prop.SetValue(instantiatedObject, (Nullable<Double>)convertedDoubleValue);
+                        else
+                            prop.SetValue(instantiatedObject, convertedDoubleValue);
                     }
                     else if (propType == typeof(Int32) || propType == typeof(Nullable<Int32>))
                     {
@@ -115,18 +156,36 @@ namespace FiscalBr.Common.Sped
             return false; // value-type
         }
 
-        private static List<System.Reflection.PropertyInfo> ObtemListaComPropriedadesOrdenadas(Type tipo)
+        public static List<System.Reflection.PropertyInfo> ObtemListaComPropriedadesOrdenadas(Type tipo, int codVersao = 0)
         {
+            var r = tipo.GetProperties()
+             .Where(p => Attribute.IsDefined(p, typeof(SpedCamposAttribute))); //Só quero os campos do tipo SpedCamposAttribute, ignorando registros filhos!
+
+            if (codVersao > 0)
+            {
+                r = r.Where(x => x.GetCustomAttributes(typeof(SpedCamposAttribute), true)
+                .Cast<SpedCamposAttribute>()
+                .Any(a => a.Versao <= codVersao));
+
+            }
+
+            r = r.OrderBy(p => p.GetCustomAttributes(typeof(SpedCamposAttribute), true)
+                .Cast<SpedCamposAttribute>()
+                .Select(a => a.Ordem)
+                .FirstOrDefault());
+
+            return r.ToList();
+
             /*
              * http://stackoverflow.com/questions/22306689/get-properties-of-class-by-order-using-reflection
              */
-            return tipo.GetProperties()
-                .Where(p => Attribute.IsDefined(p, typeof(SpedCamposAttribute))) //Só quero os campos do tipo SpedCamposAttribute, ignorando registros filhos!
-                .OrderBy(p => p.GetCustomAttributes(typeof(SpedCamposAttribute), true)
-                .Cast<SpedCamposAttribute>()
-                .Select(a => a.Ordem)
-                .FirstOrDefault())
-                .ToList();
+            //return tipo.GetProperties()
+            //    .Where(p => Attribute.IsDefined(p, typeof(SpedCamposAttribute))) //Só quero os campos do tipo SpedCamposAttribute, ignorando registros filhos!
+            //    .OrderBy(p => p.GetCustomAttributes(typeof(SpedCamposAttribute), true)
+            //    .Cast<SpedCamposAttribute>()
+            //    .Select(a => a.Ordem)
+            //    .FirstOrDefault())
+            //    .ToList();
         }
     }
 }

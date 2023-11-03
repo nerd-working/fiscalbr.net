@@ -1,5 +1,6 @@
 ﻿using FiscalBr.Common;
 using FiscalBr.Common.Sped;
+using FiscalBr.Common.Sped.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace FiscalBr.EFDFiscal
     /// <summary>
     ///     BLOCO E: APURAÇÃO DO ICMS E DO IPI
     /// </summary>
-    public class BlocoE
+    public class BlocoE : IBlocoSped
     {
         public RegistroE001 RegE001 { get; set; }
         public RegistroE990 RegE990 { get; set; }
@@ -17,14 +18,29 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E001: ABERTURA DO BLOCO E
         /// </summary>
-        public class RegistroE001 : RegistroBaseSped
+        public class RegistroE001 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE001" />.
             /// </summary>
-            public RegistroE001()
+            public RegistroE001() : base("E001")
             {
-                Reg = "E001";
+            }
+
+            /// <summary>
+            ///   Inicializa uma nova instância da classe <see cref="RegistroE001"/>.
+            /// </summary>
+            public RegistroE001(IndMovimento indMovimento) : base("E001")
+            {
+                IndMov = indMovimento;
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="RegistroE001" />.
+            /// </summary>
+            public RegistroE001(bool temMovimento) : base("E001")
+            {
+                IndMov = temMovimento ? IndMovimento.BlocoComDados : IndMovimento.BlocoSemDados;
             }
 
             /// <summary>
@@ -39,19 +55,36 @@ namespace FiscalBr.EFDFiscal
             public List<RegistroE200> RegE200s { get; set; }
             public List<RegistroE300> RegE300s { get; set; }
             public List<RegistroE500> RegE500s { get; set; }
+
+            public RegistroE001 ComIndicadorMovimento(bool v)
+            {
+                IndMov = v ? IndMovimento.BlocoComDados : IndMovimento.BlocoSemDados;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO E100: PERÍODO DA APURAÇÃO DO ICMS.
         /// </summary>
-        public class RegistroE100 : RegistroBaseSped
+        public class RegistroE100 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE100" />.
             /// </summary>
-            public RegistroE100()
+            public RegistroE100() : base("E100")
             {
-                Reg = "E100";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="RegistroE100" />.
+            /// </summary>
+            public RegistroE100(
+                DateTime dataInicial,
+                DateTime dataFinal
+                ) : base("E100")
+            {
+                DtIni = dataInicial;
+                DtFin = dataFinal;
             }
 
             /// <summary>
@@ -67,122 +100,215 @@ namespace FiscalBr.EFDFiscal
             public DateTime DtFin { get; set; }
 
             public RegistroE110 RegE110 { get; set; }
-           
+
+            public RegistroE100 ComDataInicial(DateTime v)
+            {
+                DtIni = v;
+                return this;
+            }
+
+            public RegistroE100 ComDataFinal(DateTime v)
+            {
+                DtFin = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO E110: APURAÇÃO DO ICMS – OPERAÇÕES PRÓPRIAS.
         /// </summary>
-        public class RegistroE110 : RegistroBaseSped
+        public class RegistroE110 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE110" />.
             /// </summary>
-            public RegistroE110()
+            public RegistroE110() : base("E110")
             {
-                Reg = "E110";
             }
 
             /// <summary>
             ///     Valor total dos débitos por "Saídas e prestações com débito do imposto"
             /// </summary>
-            [SpedCampos(2, "VL_TOT_DEBITOS", "N", 0, 2, true, 2)]
+            [SpedCampos(2, "VL_TOT_DEBITOS", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotDebitos { get; set; }
 
             /// <summary>
             ///     Valor total dos ajustes a débito decorrentes do documento fiscal.
             /// </summary>
-            [SpedCampos(3, "VL_AJ_DEBITOS", "N", 0, 2, true, 2)]
+            [SpedCampos(3, "VL_AJ_DEBITOS", "N", int.MaxValue, 2, true, 2)]
             public decimal VlAjDebitos { get; set; }
 
             /// <summary>
             ///     Valor total de "Ajustes a débito"
             /// </summary>
-            [SpedCampos(4, "VL_TOT_AJ_DEBITOS", "N", 0, 2, true, 2)]
+            [SpedCampos(4, "VL_TOT_AJ_DEBITOS", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotAjDebitos { get; set; }
 
             /// <summary>
             ///     Valor total de Ajustes “Estornos de créditos”
             /// </summary>
-            [SpedCampos(5, "VL_ESTORNOS_CRED", "N", 0, 2, true, 2)]
+            [SpedCampos(5, "VL_ESTORNOS_CRED", "N", int.MaxValue, 2, true, 2)]
             public decimal VlEstornosCred { get; set; }
 
             /// <summary>
             ///     Valor total dos créditos por "Entradas e aquisições com crédito do imposto"
             /// </summary>
-            [SpedCampos(6, "VL_TOT_CREDITOS", "N", 0, 2, true, 2)]
+            [SpedCampos(6, "VL_TOT_CREDITOS", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotCreditos { get; set; }
 
             /// <summary>
             ///     Valor total dos ajustes a crédito decorrentes do documento fiscal.
             /// </summary>
-            [SpedCampos(7, "VL_AJ_CREDITOS", "N", 0, 2, true, 2)]
+            [SpedCampos(7, "VL_AJ_CREDITOS", "N", int.MaxValue, 2, true, 2)]
             public decimal VlAjCreditos { get; set; }
 
             /// <summary>
             ///     Valor total de "Ajustes a crédito"
             /// </summary>
-            [SpedCampos(8, "VL_TOT_AJ_CREDITOS", "N", 0, 2, true, 2)]
+            [SpedCampos(8, "VL_TOT_AJ_CREDITOS", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotAjCreditos { get; set; }
 
             /// <summary>
             ///     Valor total de Ajustes “Estornos de Débitos”
             /// </summary>
-            [SpedCampos(9, "VL_ESTORNOS_DEB", "N", 0, 2, true, 2)]
+            [SpedCampos(9, "VL_ESTORNOS_DEB", "N", int.MaxValue, 2, true, 2)]
             public decimal VlEstornosDeb { get; set; }
 
             /// <summary>
             ///     Valor total de "Saldo credor do período anterior"
             /// </summary>
-            [SpedCampos(10, "VL_SLD_CREDOR_ANT", "N", 0, 2, true, 2)]
+            [SpedCampos(10, "VL_SLD_CREDOR_ANT", "N", int.MaxValue, 2, true, 2)]
             public decimal VlSldCredorAnt { get; set; }
 
             /// <summary>
             ///     Valor do saldo devedor apurado
             /// </summary>
-            [SpedCampos(11, "VL_SLD_APURADO", "N", 0, 2, true, 2)]
+            [SpedCampos(11, "VL_SLD_APURADO", "N", int.MaxValue, 2, true, 2)]
             public decimal VlSldApurado { get; set; }
 
             /// <summary>
             ///     Valor total de "Deduções"
             /// </summary>
-            [SpedCampos(12, "VL_TOT_DED", "N", 0, 2, true, 2)]
+            [SpedCampos(12, "VL_TOT_DED", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotDed { get; set; }
 
             /// <summary>
             ///     Valor total de "ICMS a recolher (11-12)
             /// </summary>
-            [SpedCampos(13, "VL_ICMS_RECOLHER", "N", 0, 2, true, 2)]
+            [SpedCampos(13, "VL_ICMS_RECOLHER", "N", int.MaxValue, 2, true, 2)]
             public decimal VlIcmsRecolher { get; set; }
 
             /// <summary>
             ///     Valor total de "Saldo credor a transportar para o período seguinte”
             /// </summary>
-            [SpedCampos(14, "VL_SLD_CREDOR_TRANSPORTAR", "N", 0, 2, true, 2)]
+            [SpedCampos(14, "VL_SLD_CREDOR_TRANSPORTAR", "N", int.MaxValue, 2, true, 2)]
             public decimal VlSldCredorTransportar { get; set; }
 
             /// <summary>
             ///     Valores recolhidos ou a recolher, extraapuração.
             /// </summary>
-            [SpedCampos(15, "DEB_ESP", "N", 0, 2, true, 2)]
+            [SpedCampos(15, "DEB_ESP", "N", int.MaxValue, 2, true, 2)]
             public decimal DebEsp { get; set; }
 
             public List<RegistroE111> RegE111s { get; set; }
             public List<RegistroE115> RegE115s { get; set; }
             public List<RegistroE116> RegE116s { get; set; }
+
+            public RegistroE110 ComValorTotalDebitos(decimal v)
+            {
+                VlTotDebitos = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorAjusteDebitos(decimal v)
+            {
+                VlTotAjDebitos = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorTotalAjusteDebitos(decimal v)
+            {
+                VlTotAjDebitos = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorEstornoCreditos(decimal v)
+            {
+                VlEstornosCred = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorTotalCreditos(decimal v)
+            {
+                VlTotCreditos = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorAjusteCreditos(decimal v)
+            {
+                VlTotAjCreditos = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorTotalAjusteCreditos(decimal v)
+            {
+                VlTotAjCreditos = v;
+                return this;
+            }
+
+            public RegistroE110 ComValorEstornoDebitos(decimal v)
+            {
+                VlEstornosDeb = v;
+                return this;
+            }
+
+            public RegistroE110 ComSaldoCredorPeriodoAnterior(decimal v)
+            {
+                VlSldCredorAnt = v;
+                return this;
+            }
+
+            public RegistroE110 ComSaldoDevedorApurado(decimal v)
+            {
+                VlSldApurado = v;
+                return this;
+            }
+
+            public RegistroE110 ComDeducoes(decimal v)
+            {
+                VlTotDed = v;
+                return this;
+            }
+
+            public RegistroE110 ComIcmsRecolher(decimal v)
+            {
+                VlIcmsRecolher = v;
+                return this;
+            }
+
+            public RegistroE110 ComSaldoCredorTransportar(decimal v)
+            {
+                VlSldCredorTransportar = v;
+                return this;
+            }
+
+            public RegistroE110 ComValoresRecolhidosRecolherExtra(decimal v)
+            {
+                DebEsp = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO E111: AJUSTE/BENEFÍCIO/INCENTIVO DA APURAÇÃO DO ICMS
         /// </summary>
-        public class RegistroE111 : RegistroBaseSped
+        public class RegistroE111 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE111" />.
             /// </summary>
-            public RegistroE111()
+            public RegistroE111() : base("E111")
             {
-                Reg = "E111";
             }
 
             /// <summary>
@@ -194,30 +320,47 @@ namespace FiscalBr.EFDFiscal
             /// <summary>
             ///     Descrição complementar do ajuste da apuração
             /// </summary>
-            [SpedCampos(3, "DESCR_COMPL_AJ", "C", 1024, 0, false, 2)]
+            [SpedCampos(3, "DESCR_COMPL_AJ", "C", int.MaxValue, 0, false, 2)]
             public string DescrComplAj { get; set; }
 
             /// <summary>
             ///     Valor do ajuste da apuração
             /// </summary>
-            [SpedCampos(4, "VL_AJ_APUR", "N", 0, 2, true, 2)]
+            [SpedCampos(4, "VL_AJ_APUR", "N", int.MaxValue, 2, true, 2)]
             public decimal VlAjApur { get; set; }
 
             public List<RegistroE112> RegE112s { get; set; }
             public List<RegistroE113> RegE113s { get; set; }
+
+            public RegistroE111 ComCodigoAjuste(string v)
+            {
+                CodAjApur = v;
+                return this;
+            }
+
+            public RegistroE111 ComDescricaoAjuste(string v)
+            {
+                DescrComplAj = v;
+                return this;
+            }
+
+            public RegistroE111 ComValorAjuste(decimal v)
+            {
+                VlAjApur = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO E112: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃO DO ICMS
         /// </summary>
-        public class RegistroE112 : RegistroBaseSped
+        public class RegistroE112 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE112" />.
             /// </summary>
-            public RegistroE112()
+            public RegistroE112() : base("E112")
             {
-                Reg = "E112";
             }
 
             /// <summary>
@@ -261,14 +404,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E113: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃO DO ICMS - IDENTIFICAÇÃO DOS DOCUMENTOS FISCAIS
         /// </summary>
-        public class RegistroE113 : RegistroBaseSped
+        public class RegistroE113 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE113" />.
             /// </summary>
-            public RegistroE113()
+            public RegistroE113() : base("E113")
             {
-                Reg = "E113";
             }
 
             /// <summary>
@@ -333,14 +475,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E115: INFORMAÇÕES ADICIONAIS DA APURAÇÃO - VALORES DECLARATÓRIOS
         /// </summary>
-        public class RegistroE115 : RegistroBaseSped
+        public class RegistroE115 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE115" />.
             /// </summary>
-            public RegistroE115()
+            public RegistroE115() : base("E115")
             {
-                Reg = "E115";
             }
 
             /// <summary>
@@ -365,14 +506,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E116: OBRIGAÇÕES DO ICMS RECOLHIDO OU A RECOLHER – OPERAÇÕES PRÓPRIAS.
         /// </summary>
-        public class RegistroE116 : RegistroBaseSped
+        public class RegistroE116 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE116" />.
             /// </summary>
-            public RegistroE116()
+            public RegistroE116() : base("E116")
             {
-                Reg = "E116";
             }
 
             /// <summary>
@@ -438,14 +578,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E200: PERÍODO DE APURAÇÃO DO ICMS - SUBSTITUIÇÃO TRIBUTÁRIA
         /// </summary>
-        public class RegistroE200 : RegistroBaseSped
+        public class RegistroE200 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE200" />.
             /// </summary>
-            public RegistroE200()
+            public RegistroE200() : base("E200")
             {
-                Reg = "E200";
             }
 
             /// <summary>
@@ -472,14 +611,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E210: APURAÇÃO DO ICMS - SUBSTITUIÇÃO TRIBUTÁRIA
         /// </summary>
-        public class RegistroE210 : RegistroBaseSped
+        public class RegistroE210 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE210" />.
             /// </summary>
-            public RegistroE210()
+            public RegistroE210() : base("E210")
             {
-                Reg = "E210";
             }
 
             /// <summary>
@@ -577,14 +715,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E220: AJUSTE/BENEFICIO/INCENTIVO DA APURAÇÃO DO ICMS SUBSTITUIÇÃO TRIBUTÁRIA
         /// </summary>
-        public class RegistroE220 : RegistroBaseSped
+        public class RegistroE220 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE220" />.
             /// </summary>
-            public RegistroE220()
+            public RegistroE220() : base("E220")
             {
-                Reg = "E220";
             }
 
             /// <summary>
@@ -612,14 +749,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E230: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃO DO ICMS SUBSTITUIÇÃO TRIBUTÁRIA
         /// </summary>
-        public class RegistroE230 : RegistroBaseSped
+        public class RegistroE230 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE230" />.
             /// </summary>
-            public RegistroE230()
+            public RegistroE230() : base("E230")
             {
-                Reg = "E230";
             }
 
             /// <summary>
@@ -664,14 +800,13 @@ namespace FiscalBr.EFDFiscal
         ///     REGISTRO E240: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃO DO ICMS SUBSTITUIÇÃO TRIBUTÁRIA - IDENTIFICAÇÃO DOS
         ///     DOCUMENTOS FISCAIS
         /// </summary>
-        public class RegistroE240 : RegistroBaseSped
+        public class RegistroE240 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE240" />.
             /// </summary>
-            public RegistroE240()
+            public RegistroE240() : base("E240")
             {
-                Reg = "E240";
             }
 
             /// <summary>
@@ -726,14 +861,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E250: OBRIGAÇÕES DO ICMS RECOLHIDO OU A RECOLHER - SUBSTITUIÇÃO TRIBUTÁRIA
         /// </summary>
-        public class RegistroE250 : RegistroBaseSped
+        public class RegistroE250 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE250" />.
             /// </summary>
-            public RegistroE250()
+            public RegistroE250() : base("E250")
             {
-                Reg = "E250";
             }
 
             /// <summary>
@@ -801,14 +935,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E300: PERÍODO DE APURAÇÃO DO ICMS DIFERENCIAL DE ALÍQUOTA - UF ORIGEM/DESTINO EC 87/15
         /// </summary>
-        public class RegistroE300 : RegistroBaseSped
+        public class RegistroE300 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE300" />.
             /// </summary>
-            public RegistroE300()
+            public RegistroE300() : base("E300")
             {
-                Reg = "E300";
             }
 
             /// <summary>
@@ -835,14 +968,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E310: APURAÇÃO DO ICMS DIFERENCIAL DE ALÍQUOTA - UF ORIGEM/DESTINO EC 87/15
         /// </summary>
-        public class RegistroE310 : RegistroBaseSped
+        public class RegistroE310 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE310" />.
             /// </summary>
-            public RegistroE310()
+            public RegistroE310() : base("E310")
             {
-                Reg = "E310";
             }
 
             /// <summary>
@@ -985,14 +1117,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E311: AJUSTE/BENEFICIO/INCENTIVO DA APURAÇÃO DO ICMS DIFERENCIAL DE ALÍQUOTA UF ORIGEM/DESTINO EC 87/15
         /// </summary>
-        public class RegistroE311 : RegistroBaseSped
+        public class RegistroE311 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE311" />.
             /// </summary>
-            public RegistroE311()
+            public RegistroE311() : base("E311")
             {
-                Reg = "E311";
             }
 
             /// <summary>
@@ -1021,14 +1152,13 @@ namespace FiscalBr.EFDFiscal
         ///     REGISTRO E312: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃO DO ICMS DIFERENCIAL DE ALÍQUOTA UF ORIGEM/DESTINO EC
         ///     87/15
         /// </summary>
-        public class RegistroE312 : RegistroBaseSped
+        public class RegistroE312 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE312" />.
             /// </summary>
-            public RegistroE312()
+            public RegistroE312() : base("E312")
             {
-                Reg = "E312";
             }
 
             /// <summary>
@@ -1073,14 +1203,13 @@ namespace FiscalBr.EFDFiscal
         ///     REGISTRO E313: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃ DO ICMS DIFERENCIAL DE ALÍQUOTA UF ORIGEM/DESTINO EC
         ///     87/15 IDENTIFICAÇÃO DOS DOCUMENTOS FISCAIS
         /// </summary>
-        public class RegistroE313 : RegistroBaseSped
+        public class RegistroE313 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE313" />.
             /// </summary>
-            public RegistroE313()
+            public RegistroE313() : base("E313")
             {
-                Reg = "E313";
             }
 
             /// <summary>
@@ -1141,14 +1270,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E316: OBRIGAÇÕES DO ICMS RECOLHIDO OU A RECOLHER - DIFERENCIAL DE ALÍQUOTA UF ORIGEM/DESTINO EC 87/15
         /// </summary>
-        public class RegistroE316 : RegistroBaseSped
+        public class RegistroE316 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE316" />.
             /// </summary>
-            public RegistroE316()
+            public RegistroE316() : base("E316")
             {
-                Reg = "E316";
             }
 
             /// <summary>
@@ -1217,14 +1345,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E500: PERÍODO DE APURAÇÃO DO IPI
         /// </summary>
-        public class RegistroE500 : RegistroBaseSped
+        public class RegistroE500 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE500" />.
             /// </summary>
-            public RegistroE500()
+            public RegistroE500() : base("E500")
             {
-                Reg = "E500";
             }
 
             /// <summary>
@@ -1256,14 +1383,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E510: CONSOLIDAÇÃO DOS VALORES DO IPI
         /// </summary>
-        public class RegistroE510 : RegistroBaseSped
+        public class RegistroE510 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE510" />.
             /// </summary>
-            public RegistroE510()
+            public RegistroE510() : base("E510")
             {
-                Reg = "E510";
             }
 
             /// <summary>
@@ -1302,14 +1428,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E50: APURAÇÃO DO IPI
         /// </summary>
-        public class RegistroE520 : RegistroBaseSped
+        public class RegistroE520 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE520" />.
             /// </summary>
-            public RegistroE520()
+            public RegistroE520() : base("E520")
             {
-                Reg = "E520";
             }
 
             /// <summary>
@@ -1360,14 +1485,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E530: AJUSTES DA APURAÇÃO DO IPI
         /// </summary>
-        public class RegistroE530 : RegistroBaseSped
+        public class RegistroE530 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE530" />.
             /// </summary>
-            public RegistroE530()
+            public RegistroE530() : base("E530")
             {
-                Reg = "E530";
             }
 
             /// <summary>
@@ -1422,14 +1546,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E531: INFORMAÇÕES ADICIONAIS DOS AJUSTES DA APURAÇÃO DO IPI – IDENTIFICAÇÃO DOS DOCUMENTOS FISCAIS(01 e 55)
         /// </summary>
-        public class RegistroE531 : RegistroBaseSped
+        public class RegistroE531 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE531" />.
             /// </summary>
-            public RegistroE531()
+            public RegistroE531() : base("E531")
             {
-                Reg = "E531";
             }
 
             /// <summary>
@@ -1492,14 +1615,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO E990: ENCERRAMENTO DO BLOCO E
         /// </summary>
-        public class RegistroE990 : RegistroBaseSped
+        public class RegistroE990 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroE990" />.
             /// </summary>
-            public RegistroE990()
+            public RegistroE990() : base("E990")
             {
-                Reg = "E990";
             }
 
             /// <summary>

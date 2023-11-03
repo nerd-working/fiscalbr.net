@@ -1,20 +1,20 @@
 ﻿using FiscalBr.Common;
 using FiscalBr.Common.Sped;
+using FiscalBr.Common.Sped.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace FiscalBr.EFDContribuicoes
 {
-    public class BlocoF
+    public class BlocoF : IBlocoSped
     {
         public RegistroF001 RegF001 { get; set; }
         public RegistroF990 RegF990 { get; set; }
 
-        public class RegistroF001 : RegistroBaseSped
+        public class RegistroF001 : RegistroSped
         {
-            public RegistroF001()
+            public RegistroF001() : base("F001")
             {
-                Reg = "F001";
             }
 
             [SpedCampos(2, "IND_MOV", "C", 1, 0, true, 2)]
@@ -27,11 +27,10 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         /// Identificação do Estabelecimento
         /// </summary>
-        public class RegistroF010 : RegistroBaseSped
+        public class RegistroF010 : RegistroSped
         {
-            public RegistroF010()
+            public RegistroF010() : base("F010")
             {
-                Reg = "F010";
             }
 
             [SpedCampos(2, "CNPJ", "N", 14, 0, true, 2)]
@@ -55,11 +54,10 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         /// DEMAIS DOCUMENTOS E OPERAÇÕES GERADORAS DE CONTRIBUIÇÃO E CRÉDITOS
         /// </summary>
-        public class RegistroF100 : RegistroBaseSped
+        public class RegistroF100 : RegistroSped
         {
-            public RegistroF100()
+            public RegistroF100() : base("F100")
             {
-                Reg = "F100";
             }
 
             [SpedCampos(2, "IND_OPER", "N", 1, 0, true, 2)]
@@ -74,31 +72,31 @@ namespace FiscalBr.EFDContribuicoes
             [SpedCampos(5, "DT_OPER", "N", 8, 0, true, 2)]
             public DateTime DtOper { get; set; }
 
-            [SpedCampos(6, "VL_OPER", "N", 0, 2, true, 2)]
+            [SpedCampos(6, "VL_OPER", "N", int.MaxValue, 2, true, 2)]
             public decimal VlOper { get; set; }
 
             [SpedCampos(7, "CST_PIS", "N", 2, 0, true, 2)]
             public int CstPis { get; set; }
 
-            [SpedCampos(8, "VL_BC_PIS", "N", 0, 4, false, 2)]
+            [SpedCampos(8, "VL_BC_PIS", "N", int.MaxValue, 4, false, 2)]
             public decimal VlBcPis { get; set; }
 
             [SpedCampos(9, "ALIQ_PIS", "N", 8, 4, false, 2)]
             public decimal AliqPis { get; set; }
 
-            [SpedCampos(10, "VL_PIS", "N", 0, 2, false, 2)]
+            [SpedCampos(10, "VL_PIS", "N", int.MaxValue, 2, false, 2)]
             public decimal VlPis { get; set; }
 
             [SpedCampos(11, "CST_COFINS", "N", 2, 0, true, 2)]
             public int CstCofins { get; set; }
 
-            [SpedCampos(12, "VL_BC_COFINS", "N", 0, 4, false, 2)]
+            [SpedCampos(12, "VL_BC_COFINS", "N", int.MaxValue, 4, false, 2)]
             public decimal VlBcCofins { get; set; }
 
             [SpedCampos(13, "ALIQ_COFINS", "N", 8, 4, false, 2)]
             public decimal AliqCofins { get; set; }
 
-            [SpedCampos(14, "VL_COFINS", "N", 0, 2, false, 2)]
+            [SpedCampos(14, "VL_COFINS", "N", int.MaxValue, 2, false, 2)]
             public decimal VlCofins { get; set; }
 
             [SpedCampos(15, "NAT_BC_CRED", "C", 2, 0, false, 2)]
@@ -123,14 +121,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F111: Processo Referenciado
         /// </summary>
-        public class RegistroF111 : RegistroBaseSped
+        public class RegistroF111 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF111"/>
             /// </summary>
-            public RegistroF111()
+            public RegistroF111() : base("F111")
             {
-                Reg = "F111";
             }
 
             /// <summary>
@@ -146,21 +143,20 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
         /// <summary>
         ///     REGISTRO F120: Bens Incorporados ao Ativo Imobilizado –Operações Geradoras de Créditos com Base nos Encargos de Depreciação e Amortização
         /// </summary>
-        public class RegistroF120 : RegistroBaseSped
+        public class RegistroF120 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF120"/>
             /// </summary>
-            public RegistroF120()
+            public RegistroF120() : base("F120")
             {
-                Reg = "F120";
             }
 
             /// <summary>
@@ -205,62 +201,62 @@ namespace FiscalBr.EFDContribuicoes
             /// <summary>
             ///     Valor do Encargo de Depreciação/Amortização Incorrido no Período
             /// </summary>
-            [SpedCampos(6, "VL_OPER_DEP", "N", 0, 2, true, 2)]
-            public string VlOperDep { get; set; }
+            [SpedCampos(6, "VL_OPER_DEP", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlOperDep { get; set; }
 
             /// <summary>
             ///   Parcela do Valor do Encargo de Depreciação/Amortização a excluir da base de cálculo de Crédito
             /// </summary>
-            [SpedCampos(7, "PARC_OPER_NAO_BC_CRED", "N", 0, 2, false, 2)]
-            public string ParcOperNaoBcCred { get; set; }
+            [SpedCampos(7, "PARC_OPER_NAO_BC_CRED", "N", int.MaxValue, 2, false, 2)]
+            public decimal ParcOperNaoBcCred { get; set; }
 
             /// <summary>
             ///   Código da Situação Tributária referente ao PIS/PASEP, conforme a Tabela indicada no item 4.3.3.
             /// </summary>
             [SpedCampos(8, "CST_PIS", "N", 2, 0, true, 2)]
-            public string CstPis { get; set; }
+            public int CstPis { get; set; }
 
             /// <summary>
             ///   Base de cálculo do Crédito de PIS/PASEP no período (06 –07)
             /// </summary>
-            [SpedCampos(9, "VL_BC_PIS", "N", 0, 2, false, 2)]
-            public string VlBcPis { get; set; }
+            [SpedCampos(9, "VL_BC_PIS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlBcPis { get; set; }
 
             /// <summary>
             ///   Alíquota do PIS/PASEP (em percentual)
             /// </summary>
             [SpedCampos(10, "ALIQ_PIS", "N", 8, 4, false, 2)]
-            public string AliqPis { get; set; }
+            public decimal AliqPis { get; set; }
 
             /// <summary>
             ///     Valor do Crédito de PIS/PASEP
             /// </summary>
-            [SpedCampos(11, "VL_PIS", "N", 0, 2, false, 2)]
-            public string VlPis { get; set; }
+            [SpedCampos(11, "VL_PIS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlPis { get; set; }
 
             /// <summary>
             ///     Código da Situação Tributária referente a COFINS, conforme a Tabela indicada no item 4.3.4.
             /// </summary>
             [SpedCampos(12, "CST_COFINS", "N", 2, 0, true, 2)]
-            public string CstCofins { get; set; }
+            public int CstCofins { get; set; }
 
             /// <summary>
             ///   Base de Cálculo do Crédito da COFINS no período (06 –07)
             /// </summary>
-            [SpedCampos(13, "VL_BC_COFINS", "N", 0, 2, false, 2)]
-            public string VlBcCofins { get; set; }
+            [SpedCampos(13, "VL_BC_COFINS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlBcCofins { get; set; }
 
             /// <summary>
             ///     Alíquota da COFINS (em percentual)
             /// </summary>
             [SpedCampos(14, "ALIQ_COFINS", "N", 8, 4, false, 2)]
-            public string AliqCofins { get; set; }
+            public decimal AliqCofins { get; set; }
 
             /// <summary>
             ///   Valor do crédito da COFINS
             /// </summary>
-            [SpedCampos(15, "VL_COFINS", "N", 0, 2, false, 2)]
-            public string VlCofins { get; set; }
+            [SpedCampos(15, "VL_COFINS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlCofins { get; set; }
 
             /// <summary>
             ///   Código da conta analítica contábil debitada/creditada  
@@ -277,7 +273,7 @@ namespace FiscalBr.EFDContribuicoes
             /// <summary>
             ///   Descrição complementar do bem ou grupo de bens, com crédito apurado com base nos encargos de depreciação ou amortização.
             /// </summary>
-            [SpedCampos(18, "DESC_ BEM_IMOB", "C", 0, 0, false, 2)]
+            [SpedCampos(18, "DESC_ BEM_IMOB", "C", int.MaxValue, 0, false, 2)]
             public string DescBemImob { get; set; }
 
             public List<RegistroF129> RegF129s { get; set; }
@@ -286,14 +282,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F129: Processo Referenciado
         /// </summary>
-        public class RegistroF129 : RegistroBaseSped
+        public class RegistroF129 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF129"/>
             /// </summary>
-            public RegistroF129()
+            public RegistroF129() : base("F129")
             {
-                Reg = "F129";
             }
 
             /// <summary>
@@ -309,21 +304,20 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
         /// <summary>
         ///     REGISTRO F130: Bens Incorporados ao Ativo Imobilizado –Operações Geradoras de Créditos com Base no Valor de Aquisição/Contribuição
         /// </summary>
-        public class RegistroF130 : RegistroBaseSped
+        public class RegistroF130 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF130"/>
             /// </summary>
-            public RegistroF130()
+            public RegistroF130() : base("F130")
             {
-                Reg = "F130";
             }
 
             /// <summary>
@@ -342,7 +336,7 @@ namespace FiscalBr.EFDContribuicoes
             ///   99 = Outros bens incorporados ao Ativo Imobilizado.
             /// </summary>
             [SpedCampos(3, "IDENT_BEM_IMOB", "N", 2, 0, true, 2)]
-            public string IndntBemImob { get; set; }
+            public int IndntBemImob { get; set; }
 
             /// <summary>
             ///     Indicador da origem do bem incorporado ao ativo imobilizado, gerador de crédito:
@@ -350,7 +344,7 @@ namespace FiscalBr.EFDContribuicoes
             ///     1 –Aquisição no Mercado Externo (Importação)
             /// </summary>
             [SpedCampos(4, "IND_ORIG_CRED", "C", 1, 0, false, 2)]
-            public string IndOrigCred { get; set; }
+            public int IndOrigCred { get; set; }
 
             /// <summary>
             ///   Indicador da Utilização dos Bens Incorporados ao Ativo Imobilizado:
@@ -360,7 +354,7 @@ namespace FiscalBr.EFDContribuicoes
             ///   9 –Outros.
             /// </summary>
             [SpedCampos(5, "IND_UTIL_BEM_IMOB", "N", 1, 0, true, 2)]
-            public string IndUtilBemImob { get; set; }
+            public int IndUtilBemImob { get; set; }
 
             /// <summary>
             ///     Mês/Ano de Aquisição dos Bens Incorporados ao Ativo Imobilizado, com apuração de crédito com base no valor de aquisição.
@@ -371,20 +365,20 @@ namespace FiscalBr.EFDContribuicoes
             /// <summary>
             ///   Valor de Aquisição dos Bens Incorporados ao Ativo Imobilizado –Crédito com base no valor de aquisição.
             /// </summary>
-            [SpedCampos(7, "VL_OPER_AQUIS", "N", 0, 2, true, 2)]
-            public string VlOperAquis { get; set; }
+            [SpedCampos(7, "VL_OPER_AQUIS", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlOperAquis { get; set; }
 
             /// <summary>
             ///   Parcela do Valor de Aquisição a excluir da base de cálculo de Crédito
             /// </summary>
-            [SpedCampos(8, "PARC_OPER_NAO_BC_CRED", "N", 0, 2, false, 2)]
-            public string ParcOperNaoBcCred{ get; set; }
+            [SpedCampos(8, "PARC_OPER_NAO_BC_CRED", "N", int.MaxValue, 2, false, 2)]
+            public decimal ParcOperNaoBcCred{ get; set; }
 
             /// <summary>
             ///   Valor da Base de Cálculo do Crédito sobre Bens Incorporados ao Ativo Imobilizado (07 –08)
             /// </summary>
-            [SpedCampos(9, "VL_BC_CRED", "N", 0, 2, true, 2)]
-            public string VlBcCred { get; set; }
+            [SpedCampos(9, "VL_BC_CRED", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlBcCred { get; set; }
 
             /// <summary>
             ///  Indicador do Número de Parcelas a serem apropriadas (Crédito sobre Valor de Aquisição):
@@ -396,55 +390,55 @@ namespace FiscalBr.EFDContribuicoes
             ///  9 –Outra periodicidade definida em Lei
             /// </summary>
             [SpedCampos(10, "IND_NR_PARC", "N", 1, 0, true, 2)]
-            public string IndNrParc { get; set; }
+            public int IndNrParc { get; set; }
 
             /// <summary>
             ///   Código da Situação Tributária referente ao PIS/PASEP, conforme a Tabela indicada no item 4.3.3.
             /// </summary>
             [SpedCampos(11, "CST_PIS", "N", 2, 0, true, 2)]
-            public string CstPis { get; set; }
+            public int CstPis { get; set; }
 
             /// <summary>
             ///   Base de cálculo do Crédito de PIS/PASEP no período (06 –07)
             /// </summary>
-            [SpedCampos(12, "VL_BC_PIS", "N", 0, 2, false, 2)]
-            public string VlBcPis { get; set; }
+            [SpedCampos(12, "VL_BC_PIS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlBcPis { get; set; }
 
             /// <summary>
             ///   Alíquota do PIS/PASEP (em percentual)
             /// </summary>
             [SpedCampos(13, "ALIQ_PIS", "N", 8, 4, false, 2)]
-            public string AliqPis { get; set; }
+            public decimal AliqPis { get; set; }
 
             /// <summary>
             ///     Valor do Crédito de PIS/PASEP
             /// </summary>
-            [SpedCampos(14, "VL_PIS", "N", 0, 2, false, 2)]
-            public string VlPis { get; set; }
+            [SpedCampos(14, "VL_PIS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlPis { get; set; }
 
             /// <summary>
             ///     Código da Situação Tributária referente a COFINS, conforme a Tabela indicada no item 4.3.4.
             /// </summary>
             [SpedCampos(15, "CST_COFINS", "N", 2, 0, true, 2)]
-            public string CstCofins { get; set; }
+            public int CstCofins { get; set; }
 
             /// <summary>
             ///   Base de Cálculo do Crédito da COFINS no período (06 –07)
             /// </summary>
-            [SpedCampos(16, "VL_BC_COFINS", "N", 0, 2, false, 2)]
-            public string VlBcCofins { get; set; }
+            [SpedCampos(16, "VL_BC_COFINS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlBcCofins { get; set; }
 
             /// <summary>
             ///     Alíquota da COFINS (em percentual)
             /// </summary>
             [SpedCampos(17, "ALIQ_COFINS", "N", 8, 4, false, 2)]
-            public string AliqCofins { get; set; }
+            public decimal AliqCofins { get; set; }
 
             /// <summary>
             ///   Valor do crédito da COFINS
             /// </summary>
-            [SpedCampos(18, "VL_COFINS", "N", 0, 2, false, 2)]
-            public string VlCofins { get; set; }
+            [SpedCampos(18, "VL_COFINS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlCofins { get; set; }
 
             /// <summary>
             ///   Código da conta analítica contábil debitada/creditada  
@@ -461,7 +455,7 @@ namespace FiscalBr.EFDContribuicoes
             /// <summary>
             ///   Descrição complementar do bem ou grupo de bens, com crédito apurado com base nos encargos de depreciação ou amortização.
             /// </summary>
-            [SpedCampos(21, "DESC_ BEM_IMOB", "C", 0, 0, false, 2)]
+            [SpedCampos(21, "DESC_ BEM_IMOB", "C", int.MaxValue, 0, false, 2)]
             public string DescBemImob { get; set; }
 
             public List<RegistroF139> RegF139s { get; set; }
@@ -470,14 +464,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F139: Processo Referenciado
         /// </summary>
-        public class RegistroF139 : RegistroBaseSped
+        public class RegistroF139 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF139"/>
             /// </summary>
-            public RegistroF139()
+            public RegistroF139() : base("F139")
             {
-                Reg = "F139";
             }
 
             /// <summary>
@@ -493,21 +486,20 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
         /// <summary>
         ///     REGISTRO F150: CRÉDITO PRESUMIDO SOBRE ESTOQUE DE ABERTURA
         /// </summary>
-        public class RegistroF150 : RegistroBaseSped
+        public class RegistroF150 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroF150" />.
             /// </summary>
-            public RegistroF150()
+            public RegistroF150() : base("F150")
             {
-                Reg = "F150";
             }
 
             /// <summary>
@@ -592,11 +584,10 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         /// OPERAÇÕES DA ATIVIDADE IMOBILIÁRIA - UNIDADE IMOBILIÁRIA VENDIDA
         /// </summary>
-        public class RegistroF200 : RegistroBaseSped
+        public class RegistroF200 : RegistroSped
         {
-            public RegistroF200()
+            public RegistroF200() : base("F200")
             {
-                Reg = "F200";
             }
 
             [SpedCampos(2, "IND_OPER", "N", 2, 0, true, 2)]
@@ -620,37 +611,37 @@ namespace FiscalBr.EFDContribuicoes
             [SpedCampos(8, "DT_OPER", "N", 8, 0, true, 2)]
             public DateTime DtOper { get; set; }
 
-            [SpedCampos(9, "VL_TOT_VEND", "N", 0, 2, true, 2)]
+            [SpedCampos(9, "VL_TOT_VEND", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotVend { get; set; }
 
-            [SpedCampos(10, "VL_REC_ACUM", "N", 0, 2, false, 2)]
+            [SpedCampos(10, "VL_REC_ACUM", "N", int.MaxValue, 2, false, 2)]
             public decimal VlRecAcum { get; set; }
 
-            [SpedCampos(11, "VL_TOT_REC", "N", 0, 2, true, 2)]
+            [SpedCampos(11, "VL_TOT_REC", "N", int.MaxValue, 2, true, 2)]
             public decimal VlTotRec { get; set; }
 
             [SpedCampos(12, "CST_PIS", "N", 2, 0, true, 2)]
             public int CstPis { get; set; }
 
-            [SpedCampos(13, "VL_BC_PIS", "N", 0, 2, false, 2)]
+            [SpedCampos(13, "VL_BC_PIS", "N", int.MaxValue, 2, false, 2)]
             public decimal VlBcPis { get; set; }
 
             [SpedCampos(14, "ALIQ_PIS", "N", 8, 4, false, 2)]
             public decimal AliqPis { get; set; }
 
-            [SpedCampos(15, "VL_PIS", "N", 0, 2, false, 2)]
+            [SpedCampos(15, "VL_PIS", "N", int.MaxValue, 2, false, 2)]
             public decimal VlPis { get; set; }
 
             [SpedCampos(16, "CST_COFINS", "N", 2, 0, true, 2)]
             public int CstCofins { get; set; }
 
-            [SpedCampos(17, "VL_BC_COFINS", "N", 0, 2, false, 2)]
+            [SpedCampos(17, "VL_BC_COFINS", "N", int.MaxValue, 2, false, 2)]
             public decimal VlBcCofins { get; set; }
 
             [SpedCampos(18, "ALIQ_COFINS", "N", 8, 4, false, 2)]
             public decimal AliqCofins { get; set; }
 
-            [SpedCampos(19, "VL_COFINS", "N", 0, 2, false, 2)]
+            [SpedCampos(19, "VL_COFINS", "N", int.MaxValue, 2, false, 2)]
             public decimal VlCofins { get; set; }
 
             [SpedCampos(20, "PERC_REC_RECEB", "N", 6, 2, false, 2)]
@@ -670,206 +661,203 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F205: Operações da Atividade Imobiliária –Custo Incorrido da Unidade Imobiliária
         /// </summary>
-        public class RegistroF205 : RegistroBaseSped
+        public class RegistroF205 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF205"/>
             /// </summary>
-            public RegistroF205()
+            public RegistroF205() : base("F205")
             {
-                Reg = "F205";
             }
 
             /// <summary>
             ///    Valor  Total  do  Custo  Incorrido  da unidade imobiliária  acumulado  até  o  mês  anterior  ao  da escrituração
             /// </summary>
-            [SpedCampos(2, "VL_CUS_INC_ACUM_ANT", "N", 0, 2, true, 2)]
-            public string VlCusIncAcumAnt { get; set; }
+            [SpedCampos(2, "VL_CUS_INC_ACUM_ANT", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCusIncAcumAnt { get; set; }
 
             /// <summary>
             ///   Valor  Total  do  Custo  Incorrido  da  unidade imobiliária no mês da escrituração
             /// </summary>
-            [SpedCampos(3, "VL_CUS_INC_PER_ESC", "N", 0, 2, true, 2)]
-            public string VlCucIncPerEsc { get; set; }
+            [SpedCampos(3, "VL_CUS_INC_PER_ESC", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCucIncPerEsc { get; set; }
 
             /// <summary>
             ///    Valor  Total  do  Custo  Incorrido  da  unidade imobiliária  acumulado  até  o  mês  da  escrituração (Campo 02 + 03)
             /// </summary>
-            [SpedCampos(4, "VL_CUS_INC_ACUM", "N", 0, 2, true, 2)]
-            public string VlCusIncAcum { get; set; }
+            [SpedCampos(4, "VL_CUS_INC_ACUM", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCusIncAcum { get; set; }
 
             /// <summary>
             ///   Parcela do Custo Incorrido sem direito ao crédito da atividade imobiliária, acumulado até o período.
             /// </summary>
-            [SpedCampos(5, "VL_EXC_BC_CUS_INC_ACUM", "N", 0, 2, true, 2)]
-            public string VlExcBcCusIncAcum { get; set; }
+            [SpedCampos(5, "VL_EXC_BC_CUS_INC_ACUM", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlExcBcCusIncAcum { get; set; }
 
             /// <summary>
             ///    Valor da Base de Cálculo do Crédito sobre o Custo Incorrido, acumulado até o período da escrituração (Campo 04 –05)
             /// </summary>
-            [SpedCampos(6, "VL_BC_CUS_INC", "N", 0, 2, true, 2)]
-            public string VlBcCusINc { get; set; }
+            [SpedCampos(6, "VL_BC_CUS_INC", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlBcCusINc { get; set; }
 
             /// <summary>
             ///  Código  da  Situação  Tributária  referente  ao PIS/PASEP,  conforme  a  Tabela  indicada  no  item 4.3.3.
             /// </summary>
             [SpedCampos(7, "CST_PIS", "N", 2, 0, true, 2)]
-            public string CstPis { get; set; }
+            public int CstPis { get; set; }
 
             /// <summary>
             ///   Alíquota do PIS/PASEP (em percentual)
             /// </summary>
             [SpedCampos(8, "ALIQ_PIS", "N", 8, 4, true, 2)]
-            public string AliqPis { get; set; }
+            public decimal AliqPis { get; set; }
 
             /// <summary>
             ///  Valor  Total  do  Crédito Acumulado  sobre  o  custo incorrido –PIS/PASEP (Campo 06 x 08)
             /// </summary>
-            [SpedCampos(9, "VL_CRED_PIS_ACUM", "N", 0, 2, true, 2)]
-            public string VlCredPisAcum { get; set; }
+            [SpedCampos(9, "VL_CRED_PIS_ACUM", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredPisAcum { get; set; }
 
             /// <summary>
             ///  Parcela do crédito descontada até o período anterior da escrituração –PIS/PASEP (proporcional à receita recebida até o mês anterior).
             /// </summary>
-            [SpedCampos(10, "VL_CRED_PIS_DESC_ANT", "N", 0, 2, true, 2)]
-            public string VlCredPisDescAnt{ get; set; }
+            [SpedCampos(10, "VL_CRED_PIS_DESC_ANT", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredPisDescAnt { get; set; }
 
             /// <summary>
             ///  Parcela a descontar no período da escrituração  –PIS/PASEP  (proporcional  à  receita  recebida  no mês).
             /// </summary>
-            [SpedCampos(11, "VL_CRED_PIS_DESC", "N", 0, 2, true, 2)]
-            public string VlCredPisDesc { get; set; }
+            [SpedCampos(11, "VL_CRED_PIS_DESC", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredPisDesc { get; set; }
 
             /// <summary>
             ///  Parcela  a  descontar  em  períodos  futuros   –PIS/PASEP (Campo 09 –10 –11).
             /// </summary>
-            [SpedCampos(12, "VL_CRED_PIS_DESC_FUT", "N", 0, 2, true, 2)]
-            public string VlCredPisDescFut{ get; set; }
+            [SpedCampos(12, "VL_CRED_PIS_DESC_FUT", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredPisDescFut { get; set; }
 
             /// <summary>
             ///   Código da Situação Tributária referente ao COFINS, conforme a Tabela indicada no item 4.3.4.
             /// </summary>
             [SpedCampos(13, "CST_COFINS", "N", 2, 0, true, 2)]
-            public string CstCofins { get; set; }
+            public int CstCofins { get; set; }
 
             /// <summary>
             ///     Alíquota do COFINS (em percentual)
             /// </summary>
             [SpedCampos(14, "ALIQ_COFINS", "N", 8, 4, true, 2)]
-            public string AliqCofins { get; set; }
+            public decimal AliqCofins { get; set; }
 
             /// <summary>
             ///     Valor  Total  do  Crédito Acumulado  sobre  o  custo incorrido -COFINS (Campo 06 x 14)
             /// </summary>
-            [SpedCampos(15, "VL_CRED_COFINS_ACUM", "N", 0, 2, true, 2)]
-            public string VlCredCofinsAcum { get; set; }
+            [SpedCampos(15, "VL_CRED_COFINS_ACUM", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredCofinsAcum { get; set; }
 
             /// <summary>
             ///  Parcela do crédito descontada até o período anterior da escrituração –COFINS (proporcional à receita recebida até o mês anterior).
             /// </summary>
-            [SpedCampos(16, "VL_CRED_COFINS_DESC_ANT", "N", 0, 2, true, 2)]
-            public string VlCredCofinsDescAnt { get; set; }
+            [SpedCampos(16, "VL_CRED_COFINS_DESC_ANT", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredCofinsDescAnt { get; set; }
 
             /// <summary>
             ///    Parcela a descontar no período da escrituração  –COFINS (proporcional à receita recebida no mês).
             /// </summary>
-            [SpedCampos(17, "VL_CRED_COFINS_DESC", "N", 0, 2, true, 2)]
-            public string VlCredCofinsDesc { get; set; }
+            [SpedCampos(17, "VL_CRED_COFINS_DESC", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredCofinsDesc { get; set; }
 
             /// <summary>
             ///   Parcela a descontar em períodos futuros  –COFINS (Campo 15 –16 –17).
             /// </summary>
-            [SpedCampos(18, "VL_CRED_COFINS_DESC_FUT", "N", 0, 2, true, 2)]
-            public string VlCredCofinsDescFut { get; set; }
+            [SpedCampos(18, "VL_CRED_COFINS_DESC_FUT", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredCofinsDescFut { get; set; }
 
         }
 
         /// <summary>
         ///     REGISTRO F210: Operações da Atividade Imobiliária -Custo Orçado da Unidade Imobiliária Vendida
         /// </summary>
-        public class RegistroF210 : RegistroBaseSped
+        public class RegistroF210 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF210"/>
             /// </summary>
-            public RegistroF210()
+            public RegistroF210() : base("F210")
             {
-                Reg = "F210";
             }
 
             /// <summary>
             ///     Valor Total do Custo Orçado para Conclusão da Unidade Vendida
             /// </summary>
-            [SpedCampos(2, "VL_CUS_ORC", "N", 0, 2, true, 2)]
-            public string VlCusOrc { get; set; }
+            [SpedCampos(2, "VL_CUS_ORC", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCusOrc { get; set; }
 
             /// <summary>
             ///   Valores Referentes a Pagamentos a Pessoas Físicas, Encargos Trabalhistas, Sociais e Previdenciários e à aquisição de bens e serviços não sujeitos ao pagamento das contribuições
             /// </summary>
-            [SpedCampos(3, "VL_EXC", "N", 0, 2, true, 2)]
-            public string VlExc { get; set; }
+            [SpedCampos(3, "VL_EXC", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlExc { get; set; }
 
             /// <summary>
             ///   Valor da Base de Calculo do Crédito sobre o Custo Orçado Ajustado (Campo 02 –03)
             /// </summary>
-            [SpedCampos(4, "VL_CUS_ORC_AJU", "N", 0, 2, true, 2)]
-            public string VlCusOrcAju { get; set; }
+            [SpedCampos(4, "VL_CUS_ORC_AJU", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCusOrcAju { get; set; }
 
             /// <summary>
             ///  Valor da Base de Cálculo do Crédito sobre o Custo Orçado  referente  ao  mês  da  escrituração, proporcionalizada em função da receita recebida no mês.
             /// </summary>
-            [SpedCampos(5, "VL_BC_CRED", "N", 0, 2, true, 2)]
-            public string VlBcCred { get; set; }
+            [SpedCampos(5, "VL_BC_CRED", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlBcCred { get; set; }
 
             /// <summary>
             ///   Código da Situação Tributária referente ao PIS/PASEP, conforme a Tabela indicada no item 4.3.3
             /// </summary>
             [SpedCampos(6, "CST_PIS", "N", 2, 0, true, 2)]
-            public string CstPIs { get; set; }
+            public int CstPIs { get; set; }
 
             /// <summary>
             ///  Alíquota do PIS/PASEP (em percentual)
             /// </summary>
             [SpedCampos(7, "ALIQ_PIS", "N", 8, 4, false, 2)]
-            public string AliqPis { get; set; }
+            public decimal AliqPis { get; set; }
 
             /// <summary>
             ///   Valor  do Crédito  sobre  o  custo  orçado  a  ser utilizado no período da escrituração -PIS/PASEP (Campo 05 x 07)
             /// </summary>
-            [SpedCampos(8, "VL_CRED_PIS_UTIL", "N", 0, 2, false, 2)]
-            public string VlCredPisUtil { get; set; }
+            [SpedCampos(8, "VL_CRED_PIS_UTIL", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlCredPisUtil { get; set; }
 
             /// <summary>
             ///  Código da Situação Tributária referente a COFINS, conforme aTabela indicada no item 4.3.4.
             /// </summary>
             [SpedCampos(9, "CST_COFINS", "N", 2, 0, true, 2)]
-            public string CstCofins { get; set; }
+            public int CstCofins { get; set; }
 
             /// <summary>
             ///   Alíquota da COFINS (em percentual)
             /// </summary>
             [SpedCampos(10, "ALIQ_COFINS", "N", 8, 4, false, 2)]
-            public string AliqCofins { get; set; }
+            public decimal AliqCofins { get; set; }
 
             /// <summary>
             /// Valor  do  Crédito  sobre  o  custo  orçado  a  ser utilizado  no  período  da  escrituração -COFINS (Campo 05 x 10)
             /// </summary>
-            [SpedCampos(11, "VL_CRED_COFINS_UTIL", "N", 0, 2, false, 2)]
-            public string VlCredCofinsUtil { get; set; }
+            [SpedCampos(11, "VL_CRED_COFINS_UTIL", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlCredCofinsUtil { get; set; }
 
         }
 
         /// <summary>
         ///     REGISTRO F211: Processo Referenciado
         /// </summary>
-        public class RegistroF211 : RegistroBaseSped
+        public class RegistroF211 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF211"/>
             /// </summary>
-            public RegistroF211()
+            public RegistroF211() : base("F211")
             {
-                Reg = "F211";
             }
 
             /// <summary>
@@ -885,18 +873,17 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
         /// <summary>
         /// CONSOLIDAÇÃO DAS OPERAÇÕES DA PESSOA JURÍDICA SUBMETIDA AO REGIME DE TRIBUTAÇÃO COM BASE NO LUCRO PRESUMIDO  – INCIDÊNCIA DO PIS/PASEP E DA COFINS PELO REGIME DE CAIXA
         /// </summary>
-        public class RegistroF500 : RegistroBaseSped
+        public class RegistroF500 : RegistroSped
         {
-            public RegistroF500()
+            public RegistroF500() : base("F500")
             {
-                Reg = "F500";
             }
 
             [SpedCampos(2, "VL_REC_CAIXA", "N", int.MaxValue, 2, true, 2)]
@@ -950,14 +937,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F509: Processo Referenciado
         /// </summary>
-        public class RegistroF509 : RegistroBaseSped
+        public class RegistroF509 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF509"/>
             /// </summary>
-            public RegistroF509()
+            public RegistroF509() : base("F509")
             {
-                Reg = "F509";
             }
 
             /// <summary>
@@ -973,7 +959,7 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
@@ -981,81 +967,80 @@ namespace FiscalBr.EFDContribuicoes
         ///     REGISTRO F510: Consolidação das Operações da Pessoa Jurídica Submetida ao Regime de Tributação Com Base no Lucro Presumido 
         ///     –Incidência do PIS/Pasep e da Cofins pelo Regime de Caixa (Apuração da Contribuição por Unidade de Medida de Produto –Alíquota em Reais)
         /// </summary>
-        public class RegistroF510 : RegistroBaseSped
+        public class RegistroF510 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF510"/>
             /// </summary>
-            public RegistroF510()
+            public RegistroF510() : base("F510")
             {
-                Reg = "F510";
             }
 
             /// <summary>
             ///     Valor  total  da  receita  recebida,  referente  à combinação de CST e Alíquota.
             /// </summary>
-            [SpedCampos(2, "VL_REC_CAIXA", "N", 0, 2, true, 2)]
-            public string VlRecCaixa { get; set; }
+            [SpedCampos(2, "VL_REC_CAIXA", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlRecCaixa { get; set; }
 
             /// <summary>
             ///    Código  da  Situação  Tributária  referente  ao PIS/PASEP
             /// </summary>
             [SpedCampos(3, "CST_PIS", "N", 2, 0, true, 2)]
-            public string CstPis { get; set; }
+            public int CstPis { get; set; }
 
             /// <summary>
             ///    Valor do desconto / exclusão
             /// </summary>
-            [SpedCampos(4, "VL_DESC_PIS", "N", 0, 2, false, 2)]
-            public string VlDescPis { get; set; }
+            [SpedCampos(4, "VL_DESC_PIS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlDescPis { get; set; }
 
             /// <summary>
             ///  Base de cálculo em quantidade -PIS/PASEP
             /// </summary>
-            [SpedCampos(5, "QUANT_BC_PIS", "N", 0, 3, false, 2)]
-            public string QuantBcPis { get; set; }
+            [SpedCampos(5, "QUANT_BC_PIS", "N", int.MaxValue, 3, false, 2)]
+            public decimal QuantBcPis { get; set; }
 
             /// <summary>
             ///    Alíquota do PIS/PASEP (em reais
             /// </summary>
             [SpedCampos(6, "ALIQ_PIS_QUANT", "N", 8, 4, false, 2)]
-            public string AliqPisQuant { get; set; }
+            public decimal AliqPisQuant { get; set; }
 
             /// <summary>
             ///  Valor do PIS/PASEP
             /// </summary>
-            [SpedCampos(7, "VL_PIS", "N", 0, 2, false, 2)]
-            public string VlPis { get; set; }
+            [SpedCampos(7, "VL_PIS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlPis { get; set; }
 
             /// <summary>
             ///  Código da Situação Tributária referente a COFINS
             /// </summary>
             [SpedCampos(8, "CST_COFINS", "N", 2, 0, true, 2)]
-            public string CstCofins { get; set; }
+            public int CstCofins { get; set; }
 
             /// <summary>
             ///  Valor do desconto / exclusão
             /// </summary>
-            [SpedCampos(9, "VL_DESC_COFINS", "N", 0, 2, false, 2)]
-            public string VlDescCofins{ get; set; }
+            [SpedCampos(9, "VL_DESC_COFINS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlDescCofins { get; set; }
 
             /// <summary>
             ///  Base de cálculo em quantidade -COFINS
             /// </summary>
-            [SpedCampos(10, "QUANT_BC_COFINS", "N", 0, 3, false, 2)]
-            public string QuantBcCofins { get; set; }
+            [SpedCampos(10, "QUANT_BC_COFINS", "N", int.MaxValue, 3, false, 2)]
+            public decimal QuantBcCofins { get; set; }
 
             /// <summary>
             ///  Alíquota da COFINS (em reais)
             /// </summary>
             [SpedCampos(11, "ALIQ_COFINS_QUANT", "N", 8, 4, false, 2)]
-            public string AliqCofinsQuant { get; set; }
+            public decimal AliqCofinsQuant { get; set; }
 
             /// <summary>
             ///  Valor da COFINS
             /// </summary>
-            [SpedCampos(12, "VL_COFINS", "N", 0, 2, false, 2)]
-            public string VlCofins { get; set; }
+            [SpedCampos(12, "VL_COFINS", "N", int.MaxValue, 2, false, 2)]
+            public decimal VlCofins { get; set; }
 
             /// <summary>
             ///   Código do modelo do documento fiscal conforme a Tabela 4.1.1
@@ -1078,7 +1063,7 @@ namespace FiscalBr.EFDContribuicoes
             /// <summary>
             ///  Informação complementar
             /// </summary>
-            [SpedCampos(16, "INFO_COMPL", "C", 0, 0, false, 2)]
+            [SpedCampos(16, "INFO_COMPL", "C", int.MaxValue, 0, false, 2)]
             public string InfoCompl { get; set; }
 
             public List<RegistroF519> RegF519s { get; set; }
@@ -1087,14 +1072,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///    Registro F519: Processo Referenciado
         /// </summary>
-        public class RegistroF519 : RegistroBaseSped
+        public class RegistroF519 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF519"/>
             /// </summary>
-            public RegistroF519()
+            public RegistroF519() : base("F519")
             {
-                Reg = "F519";
             }
 
             /// <summary>
@@ -1110,15 +1094,14 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
-        public class RegistroF525 : RegistroBaseSped
+        public class RegistroF525 : RegistroSped
         {
-            public RegistroF525()
+            public RegistroF525() : base("F525")
             {
-                Reg = "F525";
             }
 
             [SpedCampos(2, "VL_REC", "N", int.MaxValue, 2, true, 2)]
@@ -1152,11 +1135,10 @@ namespace FiscalBr.EFDContribuicoes
             public string CodCta { get; set; }
         }
 
-        public class RegistroF550 : RegistroBaseSped
+        public class RegistroF550 : RegistroSped
         {
-            public RegistroF550()
+            public RegistroF550() : base("F550")
             {
-                Reg = "F550";
             }
 
             [SpedCampos(2, "VL_REC_COMP", "N", int.MaxValue, 2, true, 2)]
@@ -1210,14 +1192,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F559: Processo Referenciado
         /// </summary>
-        public class RegistroF559 : RegistroBaseSped
+        public class RegistroF559 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF559"/>
             /// </summary>
-            public RegistroF559()
+            public RegistroF559() : base("F559")
             {
-                Reg = "F559";
             }
 
             /// <summary>
@@ -1233,7 +1214,7 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
@@ -1243,14 +1224,13 @@ namespace FiscalBr.EFDContribuicoes
         ///     PELO REGIME DE COMPETÊNCIA (APURAÇÃO DA CONTRIBUIÇÃO POR UNIDADE DE MEDIDA DE PRODUTO
         ///     – ALÍQUOTA EM REAIS)
         /// </summary>
-        public class RegistroF560 : RegistroBaseSped
+        public class RegistroF560 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroF560" />.
             /// </summary>
-            public RegistroF560()
+            public RegistroF560() : base("F560")
             {
-                Reg = "F560";
             }
 
             /// <summary>
@@ -1349,14 +1329,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F569: Processo Referenciado
         /// </summary>
-        public class RegistroF569 : RegistroBaseSped
+        public class RegistroF569 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF569"/>
             /// </summary>
-            public RegistroF569()
+            public RegistroF569() : base("F569")
             {
-                Reg = "F569";
             }
 
             /// <summary>
@@ -1372,21 +1351,20 @@ namespace FiscalBr.EFDContribuicoes
             ///    9 –Outros
             /// </summary>
             [SpedCampos(3, "IND_PROC", "C", 1, 0, true, 2)]
-            public string IndProc { get; set; }
+            public int IndProc { get; set; }
 
         }
 
         /// <summary>
         /// CONTRIBUIÇÃO RETIDA NA FONTE
         /// </summary>
-        public class RegistroF600 : RegistroBaseSped
+        public class RegistroF600 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroF600" />.
             /// </summary>
-            public RegistroF600()
+            public RegistroF600() : base("F600")
             {
-                Reg = "F600";
             }
 
             /// <summary>
@@ -1481,14 +1459,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F700: DEDUÇÕES DIVERSAS
         /// </summary>
-        public class RegistroF700 : RegistroBaseSped
+        public class RegistroF700 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroF700" />.
             /// </summary>
-            public RegistroF700()
+            public RegistroF700() : base("F700")
             {
-                Reg = "F700";
             }
 
             /// <summary>
@@ -1544,14 +1521,13 @@ namespace FiscalBr.EFDContribuicoes
         /// <summary>
         ///     REGISTRO F800: Créditos Decorrentes de Eventos de Incorporação, Fusão e Cisão
         /// </summary>
-        public class RegistroF800 : RegistroBaseSped
+        public class RegistroF800 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma instância da classe <see cref="RegistroF800"/>
             /// </summary>
-            public RegistroF800()
+            public RegistroF800() : base("F800")
             {
-                Reg = "F800";
             }
 
             /// <summary>
@@ -1592,14 +1568,14 @@ namespace FiscalBr.EFDContribuicoes
             /// <summary>
             ///  Valor do Crédito Transferido de PIS/Pasep
             /// </summary>
-            [SpedCampos(7, "VL_CRED_PIS", "N", 0, 2, true, 2)]
-            public int VlCredPis { get; set; }
+            [SpedCampos(7, "VL_CRED_PIS", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredPis { get; set; }
 
             /// <summary>
             ///   Valor do Crédito Transferido de Cofins
             /// </summary>
-            [SpedCampos(8, "VL_CRED_COFINS", "N", 0, 2, true, 2)]
-            public string VlCredCofins{ get; set; }
+            [SpedCampos(8, "VL_CRED_COFINS", "N", int.MaxValue, 2, true, 2)]
+            public decimal VlCredCofins{ get; set; }
 
             /// <summary>
             ///  Percentual do crédito original transferido, no caso de evento de Cisão. 
@@ -1609,11 +1585,10 @@ namespace FiscalBr.EFDContribuicoes
 
         }
 
-        public class RegistroF990 : RegistroBaseSped
+        public class RegistroF990 : RegistroSped
         {
-            public RegistroF990()
+            public RegistroF990() : base("F990")
             {
-                Reg = "F990";
             }
 
             [SpedCampos(2, "QTD_LIN_F", "N", int.MaxValue, 0, true, 2)]

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FiscalBr.Common;
 using FiscalBr.Common.Sped;
 
 namespace FiscalBr.EFDFiscal
@@ -19,47 +20,114 @@ namespace FiscalBr.EFDFiscal
         public BlocoK BlocoK { get; set; }
 
         #region Leitura
-        public override void Ler(string path, Encoding encoding = null)
+
+        /// <summary>
+        /// Faz a leitura das linhas
+        /// </summary>
+        /// <param name="source"></param>
+        public override void Ler(string[] source)
+        {
+            base.Ler(source);
+
+            var codVersaoLayout = ObterVersaoLayout();
+
+            bool leituraConcluida = false;
+            foreach (var linha in Linhas)
+            {
+                if (leituraConcluida == false)
+                {
+                    var registro = (RegistroSped)LerCamposSped.LerCampos(linha, "EFDFiscal", codVersaoLayout);
+
+                    if (registro.Reg == "9999")
+                        leituraConcluida = true;
+
+                    var args = new SpedEventArgs()
+                    {
+                        Linha = linha,
+                        Registro = registro
+                    };
+                    AoProcessarLinhaRaise(this, args);
+
+                    if (linha.StartsWith("|0"))
+                        LerBloco0(registro);
+                    else if (linha.StartsWith("|1"))
+                        LerBloco1(registro);
+                    else if (linha.StartsWith("|9"))
+                        LerBloco9(registro);
+                    else if (linha.StartsWith("|B"))
+                        LerBlocoB(registro);
+                    else if (linha.StartsWith("|C"))
+                        LerBlocoC(registro);
+                    else if (linha.StartsWith("|D"))
+                        LerBlocoD(registro);
+                    else if (linha.StartsWith("|E"))
+                        LerBlocoE(registro);
+                    else if (linha.StartsWith("|G"))
+                        LerBlocoG(registro);
+                    else if (linha.StartsWith("|H"))
+                        LerBlocoH(registro);
+                    else if (linha.StartsWith("|K"))
+                        LerBlocoK(registro);
+                    else
+                        break;
+                }
+                else { break; }
+            }
+
+        }
+
+        public override void Ler(string path, Encoding encoding = null, int codVersaoLayout = 0)
         {
             base.Ler(path, encoding);
 
+            if (codVersaoLayout == 0)
+                codVersaoLayout = ObterVersaoLayout();
+
+            bool leituraConcluida = false;
             foreach (var linha in Linhas)
             {
-                var registro = (RegistroBaseSped)LerCamposSped.LerCampos(linha, file: "EFDFiscal");
-
-                var args = new SpedEventArgs()
+                if (leituraConcluida == false)
                 {
-                    Linha = linha,
-                    Registro = registro
-                };
-                AoProcessarLinhaRaise(this, args);
+                    var registro = (RegistroSped)LerCamposSped.LerCampos(linha, "EFDFiscal", codVersaoLayout);
 
-                if (linha.StartsWith("|0"))
-                    LerBloco0(registro);
-                else if (linha.StartsWith("|1"))
-                    LerBloco1(registro);
-                else if (linha.StartsWith("|9"))
-                    LerBloco9(registro);
-                else if (linha.StartsWith("|B"))
-                    LerBlocoB(registro);
-                else if (linha.StartsWith("|C"))
-                    LerBlocoC(registro);
-                else if (linha.StartsWith("|D"))
-                    LerBlocoD(registro);
-                else if (linha.StartsWith("|E"))
-                    LerBlocoE(registro);
-                else if (linha.StartsWith("|G"))
-                    LerBlocoG(registro);
-                else if (linha.StartsWith("|H"))
-                    LerBlocoH(registro);
-                else if (linha.StartsWith("|K"))
-                    LerBlocoK(registro);
-                else
-                    break;
+                    if (registro.Reg == "9999")
+                        leituraConcluida = true;
+
+                    var args = new SpedEventArgs()
+                    {
+                        Linha = linha,
+                        Registro = registro
+                    };
+                    AoProcessarLinhaRaise(this, args);
+
+                    if (linha.StartsWith("|0"))
+                        LerBloco0(registro);
+                    else if (linha.StartsWith("|1"))
+                        LerBloco1(registro);
+                    else if (linha.StartsWith("|9"))
+                        LerBloco9(registro);
+                    else if (linha.StartsWith("|B"))
+                        LerBlocoB(registro);
+                    else if (linha.StartsWith("|C"))
+                        LerBlocoC(registro);
+                    else if (linha.StartsWith("|D"))
+                        LerBlocoD(registro);
+                    else if (linha.StartsWith("|E"))
+                        LerBlocoE(registro);
+                    else if (linha.StartsWith("|G"))
+                        LerBlocoG(registro);
+                    else if (linha.StartsWith("|H"))
+                        LerBlocoH(registro);
+                    else if (linha.StartsWith("|K"))
+                        LerBlocoK(registro);
+                    else
+                        break;
+                }
+                else { break; }
             }
         }
 
-        private void LerBloco0(RegistroBaseSped registro)
+        private void LerBloco0(RegistroSped registro)
         {
             if (Bloco0 == null)
                 Bloco0 = new Bloco0();
@@ -156,7 +224,7 @@ namespace FiscalBr.EFDFiscal
                     Bloco0.Reg0001.Reg0300s.Add((Bloco0.Registro0300)registro);
                     break;
 
-                case "00305":
+                case "0305":
                     var reg0300 = Bloco0.Reg0001.Reg0300s.Last();
                     reg0300.Reg0305 = (Bloco0.Registro0305)registro;
                     break;
@@ -200,7 +268,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBloco1(RegistroBaseSped registro)
+        private void LerBloco1(RegistroSped registro)
         {
             if (Bloco1 == null)
                 Bloco1 = new Bloco1();
@@ -424,10 +492,10 @@ namespace FiscalBr.EFDFiscal
                 case "1923":
                     reg1921 = Bloco1.Reg1001.Reg1900s.Last().Reg1910s.Last().Reg1920.Reg1921s.Last();
 
-                    if (reg1921.Reg1922s == null)
-                        reg1921.Reg1922s = new List<Bloco1.Registro1922>();
+                    if (reg1921.Reg1923s == null)
+                        reg1921.Reg1923s = new List<Bloco1.Registro1923>();
 
-                    reg1921.Reg1922s.Add((Bloco1.Registro1922)registro);
+                    reg1921.Reg1923s.Add((Bloco1.Registro1923)registro);
                     break;
 
                 case "1925":
@@ -476,7 +544,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBloco9(RegistroBaseSped registro)
+        private void LerBloco9(RegistroSped registro)
         {
             if (Bloco9 == null)
                 Bloco9 = new Bloco9();
@@ -497,7 +565,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoB(RegistroBaseSped registro)
+        private void LerBlocoB(RegistroSped registro)
         {
             if (BlocoB == null)
                 BlocoB = new BlocoB();
@@ -582,10 +650,20 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoC(RegistroBaseSped registro)
+        private void LerBlocoC(RegistroSped registro)
         {
             if (BlocoC == null)
+            {
                 BlocoC = new BlocoC();
+
+                /*
+                * Cria o C001 com movimento caso nï¿½o exista no arquivo,
+                * isso ï¿½ feito para os cenï¿½rios onde serï¿½ realizada a
+                * leitura isolada somente de alguns registros do Bloco C.
+                */
+                if (BlocoC.RegC001 == null)
+                    BlocoC.RegC001 = new BlocoC.RegistroC001(true);
+            }
 
             switch (registro.Reg)
             {
@@ -1171,7 +1249,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoD(RegistroBaseSped registro)
+        private void LerBlocoD(RegistroSped registro)
         {
             if (BlocoD == null)
                 BlocoD = new BlocoD();
@@ -1484,7 +1562,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoE(RegistroBaseSped registro)
+        private void LerBlocoE(RegistroSped registro)
         {
             if (BlocoE == null)
                 BlocoE = new BlocoE();
@@ -1678,7 +1756,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoG(RegistroBaseSped registro)
+        private void LerBlocoG(RegistroSped registro)
         {
             if (BlocoG == null)
                 BlocoG = new BlocoG();
@@ -1733,7 +1811,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoH(RegistroBaseSped registro)
+        private void LerBlocoH(RegistroSped registro)
         {
             if (BlocoH == null)
                 BlocoH = new BlocoH();
@@ -1775,7 +1853,7 @@ namespace FiscalBr.EFDFiscal
             }
         }
 
-        private void LerBlocoK(RegistroBaseSped registro)
+        private void LerBlocoK(RegistroSped registro)
         {
             if (BlocoK == null)
                 BlocoK = new BlocoK();
@@ -1972,10 +2050,10 @@ namespace FiscalBr.EFDFiscal
             base.CalcularBloco9(totalizarblocos);
 
             #region Totalizar blocos
-            if (totalizarblocos) //Calcula os X990 de todos os blocos e readiciona as linhas de totalização -> |X990|
+            if (totalizarblocos) //Calcula os X990 de todos os blocos e readiciona as linhas de totalizaï¿½ï¿½o -> |X990|
             {
                 var registros = Linhas
-                    .Where(x => x.Length > 6 && x.Substring(2, 3) != "990") // Pega só as linhas que não se tratam de totalizadores
+                    .Where(x => x.Length > 6 && x.Substring(2, 3) != "990") // Pega sï¿½ as linhas que nï¿½o se tratam de totalizadores
                     .Select(x => x.Substring(1, 4));
 
                 if (Bloco0 != null)
@@ -2010,7 +2088,7 @@ namespace FiscalBr.EFDFiscal
             #endregion
 
             #region Bloco 9
-            Linhas.RemoveAll(x => x.Length > 6 && x[1] == '9'); //Remove todas as linhas do Bloco 9, as linhas serão readicionadas posteriormente
+            Linhas.RemoveAll(x => x.Length > 6 && x[1] == '9'); //Remove todas as linhas do Bloco 9, as linhas serï¿½o readicionadas posteriormente
 
             Bloco9 = new Bloco9()
             {

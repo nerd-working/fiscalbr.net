@@ -1,5 +1,7 @@
 ﻿using FiscalBr.Common;
 using FiscalBr.Common.Sped;
+using FiscalBr.Common.Sped.Enums;
+using FiscalBr.Common.Sped.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +10,7 @@ namespace FiscalBr.EFDFiscal
     /// <summary>
     ///     BLOCO 0: ABERTURA, IDENTIFICAÇÃO E REFERÊNCIAS
     /// </summary>
-    public class Bloco0
+    public class Bloco0 : IBlocoSped
     {
         public Registro0000 Reg0000 { get; set; }
         public Registro0001 Reg0001 { get; set; }
@@ -17,21 +19,22 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO 0000: ABERTURA DO ARQUIVO DIGITAL E IDENTIFICAÇÃO DA ENTIDADE
         /// </summary>
-        public class Registro0000 : RegistroBaseSped
+        public class Registro0000 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0000" />.
             /// </summary>
-            public Registro0000()
+            public Registro0000() : base("0000")
             {
-                Reg = "0000";
             }
+
+            #region Propriedades
 
             /// <summary>
             ///     Código da versão do leiaute conforme a tabela indicada no Ato COTEPE.
             /// </summary>
             [SpedCampos(2, "COD_VER", "N", 3, 0, true, 2)]
-            public CodigoVersaoLeiaute CodVer { get; set; }
+            public CodVersaoSpedFiscal CodVer { get; set; }
 
             /// <summary>
             ///     Código da finalidade do arquivo
@@ -118,25 +121,59 @@ namespace FiscalBr.EFDFiscal
             ///     1 - Outros.
             /// </summary>
             [SpedCampos(15, "IND_ATIV", "N", 1, 0, true, 2)]
-            public IndTipoAtividade IndAtiv { get; set; }
+            public TipoAtivSpedFiscal IndAtiv { get; set; }
+
+            #endregion Propriedades
+
+            public Registro0000 ComVersaoLayout(CodVersaoSpedFiscal valor)
+            {
+                this.CodVer = valor;
+                return this;
+            }
+
+            public Registro0000 ComFinalidade(IndCodFinalidadeArquivo valor)
+            {
+                this.CodFin = valor;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0001: ABERTURA DO BLOCO 0
         /// </summary>
-        public class Registro0001 : RegistroBaseSped
+        public class Registro0001 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0001" />.
             /// </summary>
-            public Registro0001()
+            public Registro0001() : base("0001")
             {
-                Reg = "0001";
             }
 
             /// <summary>
-            ///     Indicador de movimento: 0 - Bloco com dados informados; 1 - Bloco sem dados informados.
+            ///     Inicializa uma nova instância da classe <see cref="Registro0001" />.
             /// </summary>
+            public Registro0001(IndMovimento indMovimento) : base("0001")
+            {
+                IndMov = indMovimento;
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0001" />.
+            /// </summary>
+            public Registro0001(bool temMovimento) : base("0001")
+            {
+                IndMov = temMovimento ? IndMovimento.BlocoComDados : IndMovimento.BlocoSemDados;
+            }
+
+            /// <summary>
+            ///     Indicador de movimento
+            /// </summary>
+            /// <remarks>
+            ///     0 - Bloco com dados informados;
+            ///     <para />
+            ///     1 - Bloco sem dados informados.
+            /// </remarks>
             [SpedCampos(2, "IND_MOV", "N", 1, 0, true, 2)]
             public IndMovimento IndMov { get; set; }
             
@@ -153,19 +190,24 @@ namespace FiscalBr.EFDFiscal
             public List<Registro0460> Reg0460s { get; set; }
             public List<Registro0500> Reg0500s { get; set; }
             public List<Registro0600> Reg0600s { get; set; }
+
+            public Registro0001 ComIndicadorMovimento(bool valor)
+            {
+                this.IndMov = valor ? IndMovimento.BlocoComDados : IndMovimento.BlocoSemDados;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0002: CLASSIFICAÇÃO DO ESTABELECIMENTO INDUSTRIAL OU EQUIPARADO A INDUSTRIAL
         /// </summary>
-        public class Registro0002 : RegistroBaseSped
+        public class Registro0002 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0002" />.
             /// </summary>
-            public Registro0002()
+            public Registro0002() : base("0002")
             {
-                Reg = "0002";
             }
 
             /// <summary>
@@ -173,19 +215,40 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(2, "CLAS_ESTAB_IND", "C", 2, 0, true, 2)]
             public ClassEstabIndustrial ClassEstabInd { get; set; }
+
+            public Registro0002 ComTipoEstabelecimento(ClassEstabIndustrial v)
+            {
+                ClassEstabInd = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0005: DADOS COMPLEMENTARES DA ENTIDADE
         /// </summary>
-        public class Registro0005 : RegistroBaseSped
+        public class Registro0005 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0005" />.
             /// </summary>
-            public Registro0005()
+            public Registro0005() : base("0005")
             {
-                Reg = "0005";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0005" />.
+            /// </summary>
+            public Registro0005(
+                string fant,
+                string cep,
+                string end,
+                string bairro
+                ) : base("0005")
+            {
+                Fantasia = fant;
+                Cep = cep;
+                End = end;
+                Bairro = bairro;
             }
 
             /// <summary>
@@ -241,19 +304,84 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(10, "EMAIL", "C", int.MaxValue, 0, false, 2)]
             public string Email { get; set; }
+
+            public Registro0005 ComFantasia(string v)
+            {
+                Fantasia = v;
+                return this;
+            }
+
+            public Registro0005 ComCep(string v)
+            {
+                Cep = v;
+                return this;
+            }
+
+            public Registro0005 ComEndereco(string v)
+            {
+                End = v;
+                return this;
+            }
+
+            public Registro0005 ComNumero(string v)
+            {
+                Num = v;
+                return this;
+            }
+
+            public Registro0005 ComComplemento(string v)
+            {
+                Compl = v;
+                return this;
+            }
+
+            public Registro0005 ComBairro(string v)
+            {
+                Bairro = v;
+                return this;
+            }
+
+            public Registro0005 ComTelefone(string v)
+            {
+                Fone = v;
+                return this;
+            }
+
+            public Registro0005 ComFax(string v)
+            {
+                Fax = v;
+                return this;
+            }
+
+            public Registro0005 ComEmail(string v)
+            {
+                Email = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0015: DADOS DO CONTRIBUINTE SUBSTITUTO
         /// </summary>
-        public class Registro0015 : RegistroBaseSped
+        public class Registro0015 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0015" />.
             /// </summary>
-            public Registro0015()
+            public Registro0015() : base("0015")
             {
-                Reg = "0015";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0015" />.
+            /// </summary>
+            public Registro0015(
+                string uf,
+                string insc
+                ) : base("0015")
+            {
+                UfSt = uf;
+                IeSt = insc;
             }
 
             /// <summary>
@@ -267,19 +395,48 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(3, "IE_ST", "C", 14, 0, true, 2)]
             public string IeSt { get; set; }
+
+            public Registro0015 ComUf(string v)
+            {
+                UfSt = v;
+                return this;
+            }
+
+            public Registro0015 ComInscricaoSt(string v)
+            {
+                IeSt = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0100: DADOS DO CONTABILISTA
         /// </summary>
-        public class Registro0100 : RegistroBaseSped
+        public class Registro0100 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0100" />.
             /// </summary>
-            public Registro0100()
+            public Registro0100() : base("0100")
             {
-                Reg = "0100";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0100" />.
+            /// </summary>
+            public Registro0100(
+                string nome,
+                string cpf,
+                string crc,
+                string email,
+                string codMun
+                ) : base("0100")
+            {
+                Nome = nome;
+                Cpf = cpf;
+                Crc = crc;
+                Email = email;
+                CodMun = codMun;
             }
 
             /// <summary>
@@ -359,19 +516,112 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(14, "COD_MUN", "N", 7, 0, true, 2)]
             public string CodMun { get; set; }
+
+            public Registro0100 ComNome(string v)
+            {
+                Nome = v;
+                return this;
+            }
+
+            public Registro0100 ComCpf(string v)
+            {
+                Cpf = v;
+                return this;
+            }
+
+            public Registro0100 ComCrc(string v)
+            {
+                Crc = v;
+                return this;
+            }
+
+            public Registro0100 ComCnpj(string v)
+            {
+                Cnpj = v;
+                return this;
+            }
+
+            public Registro0100 ComCep(string v)
+            {
+                Cep = v;
+                return this;
+            }
+
+            public Registro0100 ComEndereco(string v)
+            {
+                End = v;
+                return this;
+            }
+
+            public Registro0100 ComNumero(string v)
+            {
+                Num = v;
+                return this;
+            }
+
+            public Registro0100 ComComplemento(string v)
+            {
+                Compl = v;
+                return this;
+            }
+
+            public Registro0100 ComBairro(string v)
+            {
+                Bairro = v;
+                return this;
+            }
+
+            public Registro0100 ComTelefone(string v)
+            {
+                Fone = v;
+                return this;
+            }
+
+            public Registro0100 ComFax(string v)
+            {
+                Fax = v;
+                return this;
+            }
+
+            public Registro0100 ComEmail(string v)
+            {
+                Email = v;
+                return this;
+            }
+
+            public Registro0100 ComCodMunicipio(string v)
+            {
+                CodMun = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0150: TABELA DE CADASTRO DO PARTICIPANTE
         /// </summary>
-        public class Registro0150 : RegistroBaseSped
+        public class Registro0150 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0150" />.
             /// </summary>
-            public Registro0150()
+            public Registro0150() : base("0150")
             {
-                Reg = "0150";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0150" />.
+            /// </summary>
+            public Registro0150(
+                string cod,
+                string nome,
+                string codPais,
+                string end
+                ) : base("0150")
+            {
+                CodPart = cod;
+                Nome = nome;
+                CodPais = codPais;
+                End = end;
             }
 
             /// <summary>
@@ -447,19 +697,104 @@ namespace FiscalBr.EFDFiscal
             public string Bairro { get; set; }
 
             public List<Registro0175> Reg0175s { get; set; }
+
+            public Registro0150 ComCodigoParticipante(string v)
+            {
+                CodPart = v;
+                return this;
+            }
+
+            public Registro0150 ComNomeRazaoSocial(string v)
+            {
+                Nome = v;
+                return this;
+            }
+
+            public Registro0150 ComCodigoPais(string v)
+            {
+                CodPais = v;
+                return this;
+            }
+
+            public Registro0150 ComCnpj(string v)
+            {
+                Cnpj = v;
+                return this;
+            }
+
+            public Registro0150 ComCpf(string v)
+            {
+                Cpf = v;
+                return this;
+            }
+
+            public Registro0150 ComInscricaoEstadual(string v)
+            {
+                Ie = v;
+                return this;
+            }
+
+            public Registro0150 ComCodMunicipio(string v)
+            {
+                CodMun = v;
+                return this;
+            }
+
+            public Registro0150 ComSuframa(string v)
+            {
+                Suframa = v;
+                return this;
+            }
+
+            public Registro0150 ComEndereco(string v)
+            {
+                End = v;
+                return this;
+            }
+
+            public Registro0150 ComNumero(string v)
+            {
+                Num = v;
+                return this;
+            }
+
+            public Registro0150 ComComplemento(string v)
+            {
+                Compl = v;
+                return this;
+            }
+
+            public Registro0150 ComBairro(string v)
+            {
+                Bairro = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0175: ALTERAÇÃO DA TABELA DE CADASTRO DE PARTICIPANTE
         /// </summary>
-        public class Registro0175 : RegistroBaseSped
+        public class Registro0175 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0175" />.
             /// </summary>
-            public Registro0175()
+            public Registro0175() : base("0175")
             {
-                Reg = "0175";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0175" />.
+            /// </summary>
+            public Registro0175(
+                DateTime dataAlteracao,
+                string numeroCampo,
+                string conteudoAnterior
+                ) : base("0175")
+            {
+                DtAlt = dataAlteracao;
+                NrCampo = numeroCampo;
+                ContAnt = conteudoAnterior;
             }
 
             /// <summary>
@@ -479,25 +814,54 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(4, "CONT_ANT", "C", 100, 0, true, 2)]
             public string ContAnt { get; set; }
+
+            public Registro0175 ComDataAlteracao(DateTime v)
+            {
+                DtAlt = v;
+                return this;
+            }
+
+            public Registro0175 ComNumeroCampo(string v)
+            {
+                NrCampo = v;
+                return this;
+            }
+
+            public Registro0175 ComConteudoAnterior(string v)
+            {
+                ContAnt = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0190: IDENTIFICAÇÃO DAS UNIDADES DE MEDIDA
         /// </summary>
-        public class Registro0190 : RegistroBaseSped
+        public class Registro0190 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0190" />.
             /// </summary>
-            public Registro0190()
+            public Registro0190() : base("0190")
             {
-                Reg = "0190";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0190" />.
+            /// </summary>
+            public Registro0190(
+                string unidade,
+                string descricao
+                ) : base("0190")
+            {
+                Unid = unidade;
+                Descr = descricao;
             }
 
             /// <summary>
             ///     Código da unidade de medida.
             /// </summary>
-            [SpedCampos(2, "UNID", "ACM", 6, 0, true, 2)]
+            [SpedCampos(2, "UNID", "C", 6, 0, true, 2)]
             public string Unid { get; set; }
 
             /// <summary>
@@ -505,19 +869,46 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(3, "DESCR", "C", int.MaxValue, 0, true, 2)]
             public string Descr { get; set; }
+
+            public Registro0190 ComCodigoOuSigla(string v)
+            {
+                Unid = v;
+                return this;
+            }
+
+            public Registro0190 ComDescricao(string v)
+            {
+                Descr = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0200: IDENTIFICAÇÃO DO ITEM (PRODUTOS E SERVIÇOS)
         /// </summary>
-        public class Registro0200 : RegistroBaseSped
+        public class Registro0200 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0200" />.
             /// </summary>
-            public Registro0200()
+            public Registro0200() : base("0200")
             {
-                Reg = "0200";
+            }
+
+            /// <summary>
+            ///     Inicializa uma nova instância da classe <see cref="Registro0200" />.
+            /// </summary>
+            public Registro0200(
+                string codItem,
+                string descItem,
+                string unidItem,
+                IndTipoItem tipoItem
+                ) : base("0200")
+            {
+                CodItem = codItem;
+                DescrItem = descItem;
+                UnidInv = unidItem;
+                TipoItem = tipoItem;
             }
 
             /// <summary>
@@ -563,7 +954,7 @@ namespace FiscalBr.EFDFiscal
             ///     Material de Uso e Consumo; 08 - Ativo Imobilizado; 09 - Serviços; 10 - Outros insumos; 99 - Outras.
             /// </summary>
             [SpedCampos(7, "TIPO_ITEM", "N", 2, 0, true, 2)]
-            public string TipoItem { get; set; }
+            public IndTipoItem TipoItem { get; set; }
 
             /// <summary>
             ///     Código da Nomenclatura Comum do Mercosul
@@ -608,19 +999,84 @@ namespace FiscalBr.EFDFiscal
             public List<Registro0210> Reg0210s { get; set; }
             public List<Registro0220> Reg0220s { get; set; }
             public List<Registro0221> Reg0221s { get; set; }
+
+            public Registro0200 ComCodigoItem(string v)
+            {
+                CodItem = v;
+                return this;
+            }
+
+            public Registro0200 ComDescricaoItem(string v)
+            {
+                DescrItem = v;
+                return this;
+            }
+
+            public Registro0200 ComCodBarras(string v)
+            {
+                CodBarra = v;
+                return this;
+            }
+
+            public Registro0200 ComUnidade(string v)
+            {
+                UnidInv = v;
+                return this;
+            }
+
+            public Registro0200 ComTipoItem(IndTipoItem v)
+            {
+                TipoItem = v;
+                return this;
+            }
+
+            public Registro0200 ComCodigoNcm(string v)
+            {
+                CodNcm = v;
+                return this;
+            }
+
+            public Registro0200 ComCodigoExIpi(string v)
+            {
+                ExIpi = v;
+                return this;
+            }
+
+            public Registro0200 ComCodigoGenero(string v)
+            {
+                CodGen = v;
+                return this;
+            }
+
+            public Registro0200 ComCodigoServico(string v)
+            {
+                CodLst = v;
+                return this;
+            }
+
+            public Registro0200 ComAliqIcms(decimal v)
+            {
+                AliqIcms = v;
+                return this;
+            }
+
+            public Registro0200 ComCodigoCest(string v)
+            {
+                Cest = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0205: ALTERAÇÃO DO ITEM
         /// </summary>
-        public class Registro0205 : RegistroBaseSped
+        public class Registro0205 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0205" />.
             /// </summary>
-            public Registro0205()
+            public Registro0205() : base("0205")
             {
-                Reg = "0205";
             }
 
             /// <summary>
@@ -646,19 +1102,42 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(5, "COD_ANT_ITEM", "C", 60, 0, false, 3)]
             public string CodAntItem { get; set; }
+
+            public Registro0205 ComDescricaoAnterior(string v)
+            {
+                DescrAntItem = v;
+                return this;
+            }
+
+            public Registro0205 ComDataInicial(DateTime v)
+            {
+                DtIni = v;
+                return this;
+            }
+
+            public Registro0205 ComDataFinal(DateTime v)
+            {
+                DtFin = v;
+                return this;
+            }
+
+            public Registro0205 ComCodigoAnterior(string v)
+            {
+                CodAntItem = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0206: CÓDIGO DE PRODUTO CONFORME TABELA PUBLICADA PELA ANP (COMBUSTÍVEIS)
         /// </summary>
-        public class Registro0206 : RegistroBaseSped
+        public class Registro0206 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0206" />.
             /// </summary>
-            public Registro0206()
+            public Registro0206() : base("0206")
             {
-                Reg = "0206";
             }
 
             /// <summary>
@@ -666,19 +1145,24 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(2, "COD_COMB", "C", int.MaxValue, 0, true, 2)]
             public string CodComb { get; set; }
+
+            public Registro0206 ComCodigo(string v)
+            {
+                CodComb = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0210: CONSUMO ESPECÍFICO PADRONIZADO
         /// </summary>
-        public class Registro0210 : RegistroBaseSped
+        public class Registro0210 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0210" />.
             /// </summary>
-            public Registro0210()
+            public Registro0210() : base("0210")
             {
-                Reg = "0210";
             }
 
             /// <summary>
@@ -690,27 +1174,44 @@ namespace FiscalBr.EFDFiscal
             /// <summary>
             ///     Quantidade do item componente/insumo para se produzir uma unidade do item composto/resultante.
             /// </summary>
-            [SpedCampos(3, "QTD_COMP", "N", 0, 6, true, 10)]
+            [SpedCampos(3, "QTD_COMP", "N", int.MaxValue, 6, true, 10)]
             public decimal QtdComp { get; set; }
 
             /// <summary>
             ///     Perda/quebra normal percentual do insumo/componente para se produzir uma unidade do item composto/resultante.
             /// </summary>
-            [SpedCampos(4, "PERDA", "N", 0, 4, true, 10)]
+            [SpedCampos(4, "PERDA", "N", int.MaxValue, 4, true, 10)]
             public decimal Perda { get; set; }
+
+            public Registro0210 ComCodigoItem(string v)
+            {
+                CodItemComp = v;
+                return this;
+            }
+
+            public Registro0210 ComQuantidade(decimal v)
+            {
+                QtdComp = v;
+                return this;
+            }
+
+            public Registro0210 ComPerda(decimal v)
+            {
+                Perda = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0220: FATORES DE CONVERSÃO DE UNIDADES
         /// </summary>
-        public class Registro0220 : RegistroBaseSped
+        public class Registro0220 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0220" />.
             /// </summary>
-            public Registro0220()
+            public Registro0220() : base("0220")
             {
-                Reg = "0220";
             }
 
             /// <summary>
@@ -731,20 +1232,37 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(4, "COD_BARRA", "C", int.MaxValue, 0, false, 16)]
             public string CodBarra { get; set; }
+
+            public Registro0220 ComUnidade(string v)
+            {
+                UnidConv = v;
+                return this;
+            }
+
+            public Registro0220 ComFatorConversao(decimal v)
+            {
+                FatConv = v;
+                return this;
+            }
+
+            public Registro0220 ComCodBarras(string v)
+            {
+                CodBarra = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0221: CORRELAÇÃO ENTRE CÓDIGOS DE ITENS COMERCIALIZADOS
         /// </summary>
         [SpedRegistros("01/01/2023", "")]
-        public class Registro0221 : RegistroBaseSped
+        public class Registro0221 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0221" />.
             /// </summary>
-            public Registro0221()
+            public Registro0221() : base("0221")
             {
-                Reg = "0221";
             }
 
             /// <summary>
@@ -758,19 +1276,30 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(3, "QTD_CONTIDA", "N", int.MaxValue, 6, true, 17)]
             public decimal QtdContida { get; set; }
+
+            public Registro0221 ComCodItem(string v)
+            {
+                CodItemAtomico = v;
+                return this;
+            }
+
+            public Registro0221 ComQuantidade(decimal v)
+            {
+                QtdContida = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0300: CADASTRO DE BENS OU COMPONENTES DO ATIVO IMOBILIZADO
         /// </summary>
-        public class Registro0300 : RegistroBaseSped
+        public class Registro0300 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0300" />.
             /// </summary>
-            public Registro0300()
+            public Registro0300() : base("0300")
             {
-                Reg = "0300";
             }
 
             /// <summary>
@@ -784,7 +1313,7 @@ namespace FiscalBr.EFDFiscal
             ///     Identificação do tipo de mercadoria: 1 = bem; 2 = componente.
             /// </summary>
             [SpedCampos(3, "IDENT_MERC", "C", 1, 0, true, 4)]
-            public int IdentMerc { get; set; }
+            public IndTipoMercadoria IdentMerc { get; set; }
 
             /// <summary>
             ///     Descrição do bem ou componente (modelo, marca e outras
@@ -817,19 +1346,53 @@ namespace FiscalBr.EFDFiscal
 
             public Registro0305 Reg0305 { get; set; }
 
+            public Registro0300 ComCodigoBem(string v)
+            {
+                CodIndBem = v;
+                return this;
+            }
+
+            public Registro0300 ComTipoMercadoria(IndTipoMercadoria v)
+            {
+                IdentMerc = v;
+                return this;
+            }
+
+            public Registro0300 ComDescricao(string v)
+            {
+                DescrItem = v;
+                return this;
+            }
+
+            public Registro0300 ComCodigoBemPrincipal(string v)
+            {
+                CodPrnc = v;
+                return this;
+            }
+
+            public Registro0300 ComContaContabil(string v)
+            {
+                CodCta = v;
+                return this;
+            }
+
+            public Registro0300 ComNumeroParcelas(int v)
+            {
+                NrParc = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0305: INFORMAÇÃO SOBRE A UTILIZAÇÃO DO BEM
         /// </summary>
-        public class Registro0305 : RegistroBaseSped
+        public class Registro0305 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0305" />.
             /// </summary>
-            public Registro0305()
+            public Registro0305() : base("0305")
             {
-                Reg = "0305";
             }
 
             /// <summary>
@@ -850,19 +1413,36 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(4, "VIDA_UTIL", "N", 3, 0, false, 4)]
             public int VidaUtil { get; set; }
+
+            public Registro0305 ComCodigoCentroCusto(string v)
+            {
+                CodCcus = v;
+                return this;
+            }
+
+            public Registro0305 ComDescricaoFuncaoBem(string v)
+            {
+                Func = v;
+                return this;
+            }
+
+            public Registro0305 ComVidaUtilEmMeses(int v)
+            {
+                VidaUtil = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0400: TABELA DE NATUREZA DA OPERAÇÃO/PRESTAÇÃO
         /// </summary>
-        public class Registro0400 : RegistroBaseSped
+        public class Registro0400 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0400" />.
             /// </summary>
-            public Registro0400()
+            public Registro0400() : base("0400")
             {
-                Reg = "0400";
             }
 
             /// <summary>
@@ -876,19 +1456,30 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(3, "DESCR_NAT", "C", int.MaxValue, 0, true, 2)]
             public string DescrNat { get; set; }
+
+            public Registro0400 ComCodigoNatureza(string v)
+            {
+                CodNat = v;
+                return this;
+            }
+
+            public Registro0400 ComDescricaoNatureza(string v)
+            {
+                DescrNat = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0450: TABELA DE INFORMAÇÃO COMPLEMENTAR DO DOCUMENTO FISCAL
         /// </summary>
-        public class Registro0450 : RegistroBaseSped
+        public class Registro0450 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0450" />.
             /// </summary>
-            public Registro0450()
+            public Registro0450() : base("0450")
             {
-                Reg = "0450";
             }
 
             /// <summary>
@@ -906,19 +1497,30 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(3, "TXT", "C", int.MaxValue, 0, true, 2)]
             public string Txt { get; set; }
+
+            public Registro0450 ComCodInformacaoComplementar(string v)
+            {
+                CodInf = v;
+                return this;
+            }
+
+            public Registro0450 ComTxtInformacaoComplementar(string v)
+            {
+                Txt = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0460: TABELA DE OBSERVAÇÕES DO LANÇAMENTO FISCAL
         /// </summary>
-        public class Registro0460 : RegistroBaseSped
+        public class Registro0460 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0460" />.
             /// </summary>
-            public Registro0460()
+            public Registro0460() : base("0460")
             {
-                Reg = "0460";
             }
 
             /// <summary>
@@ -932,19 +1534,30 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(3, "TXT", "C", int.MaxValue, 0, true, 2)]
             public string Txt { get; set; }
+
+            public Registro0460 ComCodigoObservacao(string v)
+            {
+                CodObs = v;
+                return this;
+            }
+
+            public Registro0460 ComDescricaoObservacao(string v)
+            {
+                Txt = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0500: PLANO DE CONTAS CONTÁBEIS
         /// </summary>
-        public class Registro0500 : RegistroBaseSped
+        public class Registro0500 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0500" />.
             /// </summary>
-            public Registro0500()
+            public Registro0500() : base("0500")
             {
-                Reg = "0500";
             }
 
             /// <summary>
@@ -963,13 +1576,13 @@ namespace FiscalBr.EFDFiscal
             ///     09 - Outras.
             /// </summary>
             [SpedCampos(3, "COD_NAT_CC", "C", 2, 0, true, 4)]
-            public string CodNatCc { get; set; }
+            public IndTipoNaturezaContaContabil CodNatCc { get; set; }
 
             /// <summary>
             ///     Indicador do tipo de conta: S - Sintética (grupo de contas); A - Analítica (conta).
             /// </summary>
             [SpedCampos(4, "IND_CTA", "C", 1, 0, true, 4)]
-            public string IndCta { get; set; }
+            public IndTipoContaContabil IndCta { get; set; }
 
             /// <summary>
             ///     Nível da conta analítica/grupo de contas.
@@ -988,19 +1601,54 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(7, "NOME_CTA", "C", 60, 0, true, 4)]
             public string NomeCta { get; set; }
+
+            public Registro0500 ComData(DateTime v)
+            {
+                DtAlt = v;
+                return this;
+            }
+
+            public Registro0500 ComNaturezaContaContabil(IndTipoNaturezaContaContabil v)
+            {
+                CodNatCc = v;
+                return this;
+            }
+
+            public Registro0500 ComTipoContaContabil(IndTipoContaContabil v)
+            {
+                IndCta = v;
+                return this;
+            }
+
+            public Registro0500 ComNivel(int v)
+            {
+                Nivel = v;
+                return this;
+            }
+
+            public Registro0500 ComCodigoContaContabil(string v)
+            {
+                CodCta = v;
+                return this;
+            }
+
+            public Registro0500 ComNomeContaContabil(string v)
+            {
+                NomeCta = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0600: CENTRO DE CUSTOS
         /// </summary>
-        public class Registro0600 : RegistroBaseSped
+        public class Registro0600 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0600" />.
             /// </summary>
-            public Registro0600()
+            public Registro0600() : base("0600")
             {
-                Reg = "0600";
             }
 
             /// <summary>
@@ -1020,19 +1668,36 @@ namespace FiscalBr.EFDFiscal
             /// </summary>
             [SpedCampos(4, "CCUS", "C", 60, 0, true, 4)]
             public string Ccus { get; set; }
+
+            public Registro0600 ComData(DateTime v)
+            {
+                DtAlt = v;
+                return this;
+            }
+
+            public Registro0600 ComCodigoCentroCusto(string v)
+            {
+                CodCcus = v;
+                return this;
+            }
+
+            public Registro0600 ComDescricaoCentroCusto(string v)
+            {
+                Ccus = v;
+                return this;
+            }
         }
 
         /// <summary>
         ///     REGISTRO 0990: ENCERRAMENTO DO BLOCO 0
         /// </summary>
-        public class Registro0990 : RegistroBaseSped
+        public class Registro0990 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="Registro0990" />.
             /// </summary>
-            public Registro0990()
+            public Registro0990() : base("0990")
             {
-                Reg = "0990";
             }
 
             /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace FiscalBr.Test.Sped
+﻿namespace FiscalBr.Test.Sped.BlocoC
 {
     public class BlocoCRegistro500Test
     {
@@ -20,7 +20,7 @@
                 Ser = "9999",
                 Sub = "000",
                 CodCons = IndClasseConsumoEnergiaOuGas.Residencial,
-                NumDoc = 123456789,
+                NumDoc = "123456789",
                 DtDoc = new DateTime(2009, 1, 1),
                 DtEs = new DateTime(2009, 1, 1),
                 VlDoc = 99.99M,
@@ -50,7 +50,7 @@
 
             var currentResult = Common.Sped.EscreverCamposSped.EscreverCampos(
                 source,
-                CodigoVersaoLeiaute.V2,
+                VersaoLeiauteSped.V2,
                 new DateTime(2015, 01, 01),
                 false,
                 true
@@ -77,7 +77,7 @@
                 Ser = "9999",
                 Sub = "000",
                 CodCons = IndClasseConsumoEnergiaOuGas.Residencial,
-                NumDoc = 123456789,
+                NumDoc = "123456789",
                 DtDoc = new DateTime(2009, 1, 1),
                 DtEs = new DateTime(2009, 1, 1),
                 VlDoc = 99.99M,
@@ -107,7 +107,7 @@
 
             var currentResult = Common.Sped.EscreverCamposSped.EscreverCampos(
                 source,
-                CodigoVersaoLeiaute.V3,
+                VersaoLeiauteSped.V3,
                 new DateTime(2015, 01, 01),
                 false,
                 true
@@ -134,7 +134,7 @@
                 Ser = "9999",
                 Sub = "000",
                 CodCons = IndClasseConsumoEnergiaOuGas.Residencial,
-                NumDoc = 123456789,
+                NumDoc = "123456789",
                 DtDoc = new DateTime(2009, 1, 1),
                 DtEs = new DateTime(2009, 1, 1),
                 VlDoc = 99.99M,
@@ -164,7 +164,7 @@
 
             var currentResult = Common.Sped.EscreverCamposSped.EscreverCampos(
                 source,
-                CodigoVersaoLeiaute.V14,
+                VersaoLeiauteSped.V14,
                 new DateTime(2021, 01, 01),
                 false,
                 true
@@ -191,7 +191,7 @@
                 Ser = "9999",
                 Sub = "000",
                 CodCons = IndClasseConsumoEnergiaOuGas.Residencial,
-                NumDoc = 123456789,
+                NumDoc = "123456789",
                 DtDoc = new DateTime(2009, 1, 1),
                 DtEs = new DateTime(2009, 1, 1),
                 VlDoc = 99.99M,
@@ -219,7 +219,7 @@
                 CodModDocRef = "06",
                 HashDocRef = "1234",
                 SerDocRef = "1111",
-                NumDocRef = 123456789,
+                NumDocRef = "123456789",
                 MesDocRef = new DateTime(2009, 1, 1),
                 EnerInjet = 1,
                 OutrDed = 1
@@ -227,7 +227,7 @@
 
             var currentResult = Common.Sped.EscreverCamposSped.EscreverCampos(
                 source,
-                CodigoVersaoLeiaute.V16,
+                VersaoLeiauteSped.V16,
                 new DateTime(2022, 01, 01),
                 false,
                 true
@@ -238,7 +238,7 @@
 
         private void SetCulture()
         {
-            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
         }
     }
 }

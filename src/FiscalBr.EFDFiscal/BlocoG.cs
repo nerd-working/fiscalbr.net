@@ -1,5 +1,6 @@
 ﻿using FiscalBr.Common;
 using FiscalBr.Common.Sped;
+using FiscalBr.Common.Sped.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace FiscalBr.EFDFiscal
     /// <summary>
     ///     BLOCO G: CONTROLE DO CRÉDITO DE ICMS DO ATIVO PERMANENTE CIAP
     /// </summary>
-    public class BlocoG
+    public class BlocoG : IBlocoSped
     {
         public RegistroG001 RegG001 { get; set; }
         public RegistroG990 RegG990 { get; set; }
@@ -16,14 +17,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G001: ABERTURA DO BLOCO G
         /// </summary>
-        public class RegistroG001 : RegistroBaseSped
+        public class RegistroG001 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG001" />.
             /// </summary>
-            public RegistroG001()
+            public RegistroG001() : base("G001")
             {
-                Reg = "G001";
             }
 
             /// <summary>
@@ -40,14 +40,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G110: ICMS - ATIVO PERMANENTE - CIAP
         /// </summary>
-        public class RegistroG110 : RegistroBaseSped
+        public class RegistroG110 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG110" />.
             /// </summary>
-            public RegistroG110()
+            public RegistroG110() : base("G110")
             {
-                Reg = "G110";
             }
 
             /// <summary>
@@ -113,26 +112,25 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G125: MOVIMENTAÇÃO DE BEM OU COMPONENTE DO ATIVO IMOBILIZADO
         /// </summary>
-        public class RegistroG125 : RegistroBaseSped
+        public class RegistroG125 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG125" />.
             /// </summary>
-            public RegistroG125()
+            public RegistroG125() : base("G125")
             {
-                Reg = "G125";
             }
 
             /// <summary>
             ///     Código individualizado do bem ou componente adotado no controle patrimonial do estabelecimento informante
             /// </summary>
-            [SpedCampos(2, "COD_IND_BEM", "C", 2, 0, true, 4)]
+            [SpedCampos(2, "COD_IND_BEM", "C", 60, 0, true, 4)]
             public string CodIndBem { get; set; }
 
             /// <summary>
             ///     Data da movimentação ou do saldo inicial
             /// </summary>
-            [SpedCampos(3, "DT_MOV", "N", 0, 2, true, 4)]
+            [SpedCampos(3, "DT_MOV", "N", 8, 0, true, 4)]
             public DateTime DtMov { get; set; }
 
             /// <summary>
@@ -155,25 +153,25 @@ namespace FiscalBr.EFDFiscal
             /// <summary>
             ///     Valor do ICMS da operação própria na entrada do bem ou componente
             /// </summary>
-            [SpedCampos(5, "VL_IMOB_ICMS_OP", "N", 0, 2, false, 4)]
+            [SpedCampos(5, "VL_IMOB_ICMS_OP", "N", 15, 2, false, 4)]
             public decimal VlImobIcmsOp { get; set; }
 
             /// <summary>
             ///     Valor do ICMS da operação por sub. tributária na entrada do bem ou componente
             /// </summary>
-            [SpedCampos(6, "VL_IMOB_ICMS_ST", "N", 0, 2, false, 4)]
+            [SpedCampos(6, "VL_IMOB_ICMS_ST", "N", 15, 2, false, 4)]
             public decimal VlImobIcmsSt { get; set; }
 
             /// <summary>
             ///     Valor do ICMS sobre frete do conhecimento de transporte na entrada do bem ou componente
             /// </summary>
-            [SpedCampos(7, "VL_IMOB_ICMS_FRT", "N", 0, 2, false, 4)]
+            [SpedCampos(7, "VL_IMOB_ICMS_FRT", "N", 15, 2, false, 4)]
             public decimal VlImobIcmsFrt { get; set; }
 
             /// <summary>
             ///     Valor do ICMS - diferencial de alíquota, conforme doc. de arrecação, na entrada do bem ou componente
             /// </summary>
-            [SpedCampos(8, "VL_IMOB_ICMS_DIF", "N", 0, 2, false, 4)]
+            [SpedCampos(8, "VL_IMOB_ICMS_DIF", "N", 15, 2, false, 4)]
             public decimal VlImobIcmsDif { get; set; }
 
             /// <summary>
@@ -186,7 +184,7 @@ namespace FiscalBr.EFDFiscal
             ///     Valor da parcela do ICMS passível de apropriação (antes da aplicação da participação percentual do valor das saídas
             ///     tributadas/exportação sobre as saídas totais)
             /// </summary>
-            [SpedCampos(10, "VL_PARC_PASS", "N", 0, 2, false, 4)]
+            [SpedCampos(10, "VL_PARC_PASS", "N", 15, 2, false, 4)]
             public decimal VlParcPass { get; set; }
 
             public List<RegistroG126> RegG126s { get; set; }
@@ -196,14 +194,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G126: OUTROS CRÉDITOS CIAP
         /// </summary>
-        public class RegistroG126 : RegistroBaseSped
+        public class RegistroG126 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG126" />.
             /// </summary>
-            public RegistroG126()
+            public RegistroG126() : base("G126")
             {
-                Reg = "G126";
             }
 
             /// <summary>
@@ -260,14 +257,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G130: IDENTIFICAÇÃO DO DOCUMENTO FISCAL
         /// </summary>
-        public class RegistroG130 : RegistroBaseSped
+        public class RegistroG130 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG130" />.
             /// </summary>
-            public RegistroG130()
+            public RegistroG130() : base("G130")
             {
-                Reg = "G130";
             }
 
             /// <summary>
@@ -332,14 +328,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G140: IDENTIFICAÇÃO DO ITEM DO DOCUMENTO FISCAL
         /// </summary>
-        public class RegistroG140 : RegistroBaseSped
+        public class RegistroG140 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG140" />.
             /// </summary>
-            public RegistroG140()
+            public RegistroG140() : base("G140")
             {
-                Reg = "G140";
             }
 
             /// <summary>
@@ -394,14 +389,13 @@ namespace FiscalBr.EFDFiscal
         /// <summary>
         ///     REGISTRO G990: ENCERRAMENTO DO BLOCO G
         /// </summary>
-        public class RegistroG990 : RegistroBaseSped
+        public class RegistroG990 : RegistroSped
         {
             /// <summary>
             ///     Inicializa uma nova instância da classe <see cref="RegistroG990" />.
             /// </summary>
-            public RegistroG990()
+            public RegistroG990() : base("G990")
             {
-                Reg = "G990";
             }
 
             /// <summary>

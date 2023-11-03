@@ -177,8 +177,177 @@ namespace FiscalBr.Common
 
     #endregion ECD
 
+    public enum LeiauteArquivoSped
+    {
+        [DefaultValue("EFDContribuicoes")] EFDContrib,
+        [DefaultValue("EFDFiscal")] EFDFiscal,
+        [DefaultValue("ECD")] ECD,
+        [DefaultValue("ECF")] ECF,
+    }
 
-    public enum CodigoVersaoLeiaute
+    public enum VersaoLeiauteSped
+    {
+        [DefaultValue("01")] V1 = 1,
+        [DefaultValue("02")] V2,
+        [DefaultValue("03")] V3,
+        [DefaultValue("04")] V4,
+        [DefaultValue("05")] V5,
+        [DefaultValue("06")] V6,
+        [DefaultValue("07")] V7,
+        [DefaultValue("08")] V8,
+        [DefaultValue("09")] V9,
+        [DefaultValue("10")] V10,
+        [DefaultValue("11")] V11,
+        [DefaultValue("12")] V12,
+        [DefaultValue("13")] V13,
+        [DefaultValue("14")] V14,
+        [DefaultValue("15")] V15,
+        [DefaultValue("16")] V16,
+        [DefaultValue("17")] V17
+    }
+
+    public enum CodVersaoSpedECD
+    {
+        /// <summary>
+        /// Até o Ano-Calendário 2012
+        /// </summary>
+        [DefaultValue("0001")] V1 = 1,
+
+        /// <summary>
+        /// Ano-Calendário 2013
+        /// </summary>
+        [DefaultValue("0002")] V2,
+
+        /// <summary>
+        /// Ano-Calendário 2014
+        /// </summary>
+        [DefaultValue("0003")] V3,
+
+        /// <summary>
+        /// Ano-Calendário 2015
+        /// </summary>
+        [DefaultValue("0004")] V4,
+
+        /// <summary>
+        /// Ano-Calendário 2016
+        /// </summary>
+        [DefaultValue("0005")] V5,
+
+        /// <summary>
+        /// Ano-Calendário 2017
+        /// </summary>
+        [DefaultValue("0006")] V6,
+
+        /// <summary>
+        /// Ano-Calendário 2018
+        /// </summary>
+        [DefaultValue("0007")] V7,
+
+        /// <summary>
+        /// Ano-Calendário 2019
+        /// </summary>
+        [DefaultValue("0008")] V8,
+
+        /// <summary>
+        /// Ano-Calendário 2020, 2021 e 2022
+        /// </summary>
+        [DefaultValue("0009")] V9,
+    }
+
+    public enum CodVersaoSpedECF
+    {
+        /// <summary>
+        /// Ano-Calendário 2014 e Situações Especiais de 2015
+        /// </summary>
+        [DefaultValue("0001")] V1 = 1,
+
+        /// <summary>
+        /// Ano-Calendário 2015 e Situações Especiais de 2016
+        /// </summary>
+        [DefaultValue("0002")] V2,
+
+        /// <summary>
+        /// Ano-Calendário 2016 e Situações Especiais de 2017
+        /// </summary>
+        [DefaultValue("0003")] V3,
+
+        /// <summary>
+        /// Ano-Calendário 2017 e Situações Especiais de 2018
+        /// </summary>
+        [DefaultValue("0004")] V4,
+
+        /// <summary>
+        /// Ano-Calendário 2018 e Situações Especiais de 2019
+        /// </summary>
+        [DefaultValue("0005")] V5,
+
+        /// <summary>
+        /// Ano-Calendário 2019 e Situações Especiais de 2020
+        /// </summary>
+        [DefaultValue("0006")] V6,
+
+        /// <summary>
+        /// Ano-Calendário 2020 e Situações Especiais de 2021
+        /// </summary>
+        [DefaultValue("0007")] V7,
+
+        /// <summary>
+        /// Ano-Calendário 2021 e Situações Especiais de 2022
+        /// </summary>
+        [DefaultValue("0008")] V8,
+
+        /// <summary>
+        /// Ano-Calendário 2022 e Situações Especiais de 2023
+        /// </summary>
+        [DefaultValue("0009")] V9,
+    }
+
+    public enum CodVersaoSpedContrib
+    {
+        /// <summary>
+        /// Código: 001
+        /// Versão: 1.00
+        /// Validade: 01/04/2011 - 30/06/2012
+        /// </summary>
+        [DefaultValue("001")] V1 = 1,
+
+        /// <summary>
+        /// Código: 002
+        /// Versão: 2.00
+        /// Validade: 01/04/2011 - 30/06/2012
+        /// </summary>
+        [DefaultValue("002")] V2,
+
+        /// <summary>
+        /// Código: 003
+        /// Versão: 2.01A
+        /// Validade: 01/07/2012 - 31/05/2018
+        /// </summary>
+        [DefaultValue("003")] V3,
+
+        /// <summary>
+        /// Código: 004
+        /// Versão: 3.0.0
+        /// Validade: 01/06/2018 - 31/12/2018
+        /// </summary>
+        [DefaultValue("004")] V4,
+
+        /// <summary>
+        /// Código: 005
+        /// Versão: 3.1.0
+        /// Validade: 01/01/2019 - 31/12/2019
+        /// </summary>
+        [DefaultValue("005")] V5,
+
+        /// <summary>
+        /// Código: 006
+        /// Versão: 3.2.0
+        /// Validade: 01/01/2020 - 31/12/20??
+        /// </summary>
+        [DefaultValue("006")] V6,
+    }
+
+    public enum CodVersaoSpedFiscal
     {
         /// <summary>
         /// Código: 002
@@ -338,8 +507,13 @@ namespace FiscalBr.Common
     }
 
     /// <summary>
-    ///     Código da finalidae do arquivo
+    ///     Código da finalidade do arquivo
     /// </summary>
+    /// <remarks>
+    ///     0 - Original
+    ///     <para />
+    ///     1 - Substituto
+    /// </remarks>
     public enum IndCodFinalidadeArquivo
     {
         /// <summary>
@@ -428,22 +602,6 @@ namespace FiscalBr.Common
         ///     Perfil C
         /// </summary>
         [DefaultValue("C")] C
-    }
-
-    /// <summary>
-    ///     Indicador do tipo de atividade
-    /// </summary>
-    public enum IndTipoAtividade
-    {
-        /// <summary>
-        ///     Industrial ou equiparado a industrial
-        /// </summary>
-        [DefaultValue("0")] IndustrialOuEquiparado,
-
-        /// <summary>
-        ///     Outros
-        /// </summary>
-        [DefaultValue("1")] Outros
     }
 
     public enum IndCodMod
@@ -594,165 +752,24 @@ namespace FiscalBr.Common
         [DefaultValue("65")] Mod65,
 
         /// <summary>
+        /// Nota Fiscal de Energia Elétrica Eletrônica - NF3e
+        /// </summary>
+        [DefaultValue("66")] Mod66,
+
+        /// <summary>
         /// Conhecimento de Transporte Eletrônico - CT-e (OS)
         /// </summary>
         [DefaultValue("67")] Mod67
     }
 
     /// <summary>
-    ///     Tipo do item - Atividades industriais, comerciais e serviços
-    /// </summary>
-    public enum IndTipoItem
-    {
-        /// <summary>
-        ///     Mercadoria para revenda: produto adquirido para comercialização
-        /// </summary>
-        [DefaultValue("00")] MercadoriaRevenda,
-
-        /// <summary>
-        ///     Matéria-prima: a mercadoria que componha, física e/ou quimicamente, um produto em processo  ou  produto acabado e
-        ///     que não seja oriunda do processo produtivo.  A mercadoria recebida para industrialização é classificada como Tipo
-        ///     01, pois  não decorre do processo produtivo, mesmo que no processo de  produção se produza mercadoria similar
-        ///     classificada como Tipo 03;
-        /// </summary>
-        [DefaultValue("01")] MateriaPrima,
-
-        /// <summary>
-        ///     Embalagem
-        /// </summary>
-        [DefaultValue("02")] Embalagem,
-
-        /// <summary>
-        ///     Produto em processo: o  produto  que  possua  as  seguintes  características,  cumulativamente:  oriundo  do
-        ///     processo  produtivo; e, preponderantemente, consumido  no  processo  produtivo.  Dentre  os  produtos  em  processo
-        ///     está  incluído  o  produto  resultante  caracterizado  como   retorno  de  produção.  Um  produto  em  processo  é
-        ///     caracterizado  como  retorno  de  produção  quando  é  resultante  de  uma  fase  de  produção  e  é  destinado,
-        ///     rotineira  e exclusivamente, a uma fase de produção anterior à qual o mesmo foi gerado. No “retorno de produção”, o
-        ///     produto retorna (é consumido) a uma fase de produção anterior à qual ele foi gerado. Isso é uma excepcionalidade,
-        ///     pois o normal  é  o  produto  em  processo  ser  consumido  em  uma  fase  de  produção  posterior  à  qual  ele
-        ///     foi  gerado, e acontece, portanto, em poucos processos produtivos.
-        /// </summary>
-        [DefaultValue("03")] ProdutoProcesso,
-
-        /// <summary>
-        ///     Produto acabado: o  produto  que  possua  as  seguintes  características,  cumulativamente:  oriundo  do  processo
-        ///     produtivo; produto  final  resultante  do  objeto  da    atividade  econômica  do    contribuinte; e  pronto  para
-        ///     ser comercializado;
-        /// </summary>
-        [DefaultValue("04")] ProdutoAcabado,
-
-        /// <summary>
-        ///     Subproduto: o  produto  que  possua  as  seguintes    características,  cumulativamente:  oriundo  do  processo
-        ///     produtivo  e  não  é  objeto  da  produção  principal  do  estabelecimento; tem    aproveitamento  econômico; não
-        ///     se enquadre no conceito de produto  em  processo (Tipo 03) ou de produto acabado (Tipo 04);
-        /// </summary>
-        [DefaultValue("05")] Subproduto,
-
-        /// <summary>
-        ///     Produto intermediário: aquele que, embora não se integrando ao novo produto, for consumido no processo de
-        ///     industrialização.
-        /// </summary>
-        [DefaultValue("06")] ProdutoIntermediario,
-
-        /// <summary>
-        ///     Material de uso e consumo
-        /// </summary>
-        [DefaultValue("07")] MaterialUsoConsumo,
-
-        /// <summary>
-        ///     Ativo imobilizado
-        /// </summary>
-        [DefaultValue("08")] AtivoImobilizado,
-
-        /// <summary>
-        ///     Serviços
-        /// </summary>
-        [DefaultValue("09")] Servicos,
-
-        /// <summary>
-        ///     Outros insumos
-        /// </summary>
-        [DefaultValue("10")] OutrosInsumos,
-
-        /// <summary>
-        ///     Outras
-        /// </summary>
-        [DefaultValue("99")] Outras
-    }
-
-    /// <summary>
-    ///     Identificação do tipo de mercadoria
-    /// </summary>
-    public enum IndTipoMercadoria
-    {
-        /// <summary>
-        ///     Bem: uma mercadoria será considerada "bem" quando possua todas as condições necessárias para ser utilizado nas
-        ///     atividades do estabelecimento.
-        /// </summary>
-        [DefaultValue("1")] Bem,
-
-        /// <summary>
-        ///     Componente: uma mercadoria será considerada "componente" quando fizer parte de um bem móvel que estiver sendo
-        ///     construído no estabelecimento do contribuinte, onde somente o bem móvel resultante é que possuirá as condições
-        ///     necessárias para ser utilizado nas atividades do estabelecimento.
-        /// </summary>
-        [DefaultValue("2")] Componente
-    }
-
-    /// <summary>
-    ///     Código da Natureza da conta/grupo de contas
-    /// </summary>
-    public enum IndNaturezaConta
-    {
-        /// <summary>
-        ///     Contas de ativo
-        /// </summary>
-        [DefaultValue("01")] ContasAtivo,
-
-        /// <summary>
-        ///     Contas de passivo
-        /// </summary>
-        [DefaultValue("02")] ContasPassivo,
-
-        /// <summary>
-        ///     Patrimônio líquido
-        /// </summary>
-        [DefaultValue("03")] PatrimonioLiquido,
-
-        /// <summary>
-        ///     Contas de resultado
-        /// </summary>
-        [DefaultValue("04")] ContasResultado,
-
-        /// <summary>
-        ///     Contas de compensação
-        /// </summary>
-        [DefaultValue("05")] ContasCompensacao,
-
-        /// <summary>
-        ///     Outras
-        /// </summary>
-        [DefaultValue("09")] Outras
-    }
-
-    /// <summary>
-    ///     Indicador do tipo de conta
-    /// </summary>
-    public enum IndTipoConta
-    {
-        /// <summary>
-        ///     Sintética (grupo de contas)
-        /// </summary>
-        [DefaultValue("S")] S,
-
-        /// <summary>
-        ///     Analítica (conta)
-        /// </summary>
-        [DefaultValue("A")] A
-    }
-
-    /// <summary>
     ///     Indicador do tipo de operação
+    /// <remarks>
+    ///     <para />
+    ///     0 - Entrada
+    ///     <para />
+    ///     1 - Saída
+    /// </remarks>
     /// </summary>
     public enum IndTipoOperacaoProduto
     {
@@ -770,21 +787,16 @@ namespace FiscalBr.Common
     /// <summary>
     ///     Indicador do tipo de operação
     /// </summary>
-    public enum IndTipoOperacaoServico
-    {
-        /// <summary>
-        ///     Aquisição
-        /// </summary>
-        [DefaultValue("0")] Aquisicao,
 
-        /// <summary>
-        ///     Prestação
-        /// </summary>
-        [DefaultValue("1")] Prestacao
-    }
 
     /// <summary>
     ///     Indicador do emitente do documento fiscal/título
+    /// <remarks>
+    ///     <para />
+    ///     0 - Emissão Própria
+    ///     <para />
+    ///     1 - Terceiros
+    /// </remarks>
     /// </summary>
     public enum IndEmitente
     {
@@ -821,6 +833,11 @@ namespace FiscalBr.Common
     public enum IndTipoPagamento
     {
         /// <summary>
+        ///     Em branco
+        /// </summary>
+        [DefaultValue("")] None,
+
+        /// <summary>
         ///     À vista
         /// </summary>
         [DefaultValue("0")] AVista,
@@ -844,12 +861,26 @@ namespace FiscalBr.Common
     /// <summary>
     ///     Indicador do tipo de frete
     /// </summary>
+    [DefaultValue(None)]
     public enum IndTipoFrete
     {
-        [DefaultValue("0")] ContaEmitente,
-        [DefaultValue("1")] ContaDestinatarioRemetente,
-        [DefaultValue("2")] ContaTerceiros,
-        [DefaultValue("9")] SemCobrancaFrete
+        [DefaultValue("")] None = -1,
+
+        [DefaultValue("0")] ContaRemetenteCif = 0,
+        [DefaultValue("1")] ContaDestinatarioFob = 1,
+        [DefaultValue("2")] ContaTerceiros = 2,
+        [DefaultValue("3")] ContaProprioRemetente = 3,
+        [DefaultValue("4")] ContaProprioDestinatario = 4,
+
+        [DefaultValue("9")] SemCobrancaFrete = 9,
+
+        [DefaultValue("0")] ContaTerceirosPre2012 = 120,
+        [DefaultValue("1")] ContaEmitentePre2012 = 121,
+        [DefaultValue("2")] ContaDestinatarioPre2012 = 122,
+
+        [DefaultValue("0")] ContaEmitentePre2018 = 180,
+        [DefaultValue("1")] ContaDestinatarioRemetentePre2018 = 181,
+        [DefaultValue("2")] ContaTerceirosPre2018 = 182
     }
 
     /// <summary>
@@ -1310,6 +1341,7 @@ namespace FiscalBr.Common
 
     public enum IndCodDestAcessante
     {
+        [DefaultValue("")] None,
         /// <summary>
         ///     Contribuinte do ICMS
         /// </summary>
